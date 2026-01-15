@@ -1,47 +1,54 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ara Ara, Excusez Moi !</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ara Ara, Excusez Moi !</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <div id="app">
-        <section id="home" class="screen">
-            <img src="paoncover.PNG" class="cover">
-            <h1 class="title">Ara Ara, Excusez Moi !</h1>
-            <p class="subtitle">Didier — le paon fou après 18h</p>
-            <button id="enterBtn" class="btn">ENTRER</button>
-        </section>
+  <div id="app">
+    <section id="home" class="screen active" aria-label="Accueil">
+      <img src="paoncover.PNG" alt="Couverture du jeu" class="cover" />
+      <h1 class="title">Ara Ara, Excusez Moi !</h1>
+      <button id="enterBtn" class="btn primary" aria-label="Entrer dans le jeu">Entrer</button>
+    </section>
 
-        <section id="game" class="screen hidden">
-            <header style="width:100%; display:flex; justify-content:space-between; align-items:center;">
-                <button id="backBtn" class="btn small">← Retour</button>
-                <span style="color:var(--accent); font-weight:bold;">Ara Ara !</span>
-            </header>
-            <div class="wheel-area">
-                <div class="pointer">▼</div>
-                <canvas id="wheel"></canvas>
-                <button id="spinBtn" class="btn spin">LANCER LA ROUE</button>
-            </div>
-            <div id="resultPanel" class="result-panel">
-                <div class="result-card">
-                    <img id="resultImage" class="result-img" src="">
-                    <div id="resultEmoji" class="result-emoji"></div>
-                    <h3 id="resultText" class="result-text"></h3>
-                    <div class="drinks-list">
-                        <div class="drink-item"><span>Pinte de Mango</span><strong id="drinkP">0</strong></div>
-                        <div class="drink-item"><span>Jagger Bomb</span><strong id="drinkJ">0</strong></div>
-                        <div class="drink-item"><span>Whisky</span><strong id="drinkW">0</strong></div>
-                    </div>
-                    <span class="mood-title">Mood of the day</span>
-                    <div id="paonMood" class="paon-mood"></div>
-                    <button id="closeResult" class="btn">OK</button>
-                </div>
-            </div>
-        </section>
-    </div>
-    <script src="app.js"></script>
+    <section id="game" class="screen hidden" aria-label="Jeu">
+      <header class="header">
+        <button id="backBtn" class="btn small" aria-label="Retour">← Retour</button>
+        <h2 class="game-title">Que fait le paon fou ce soir ?</h2>
+      </header>
+
+      <main class="main-content">
+        <div class="wheel-container">
+          <canvas id="wheel" aria-label="Roue du destin"></canvas>
+          <div class="pointer">▼</div>
+        </div>
+        <button id="spinBtn" class="btn spin" aria-label="Lancer la roue">Lancer la roue</button>
+      </main>
+
+      <div id="resultPanel" class="result-panel" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="result-card">
+          <img id="resultImage" alt="Image du résultat" class="result-img" />
+          <div id="resultEmoji" class="result-emoji"></div>
+          <h3 id="resultText" class="result-text"></h3>
+
+          <div class="drinks-list">
+            <div class="drink-item"><span>Pinte de Mango</span><strong id="drinkP">0</strong></div>
+            <div class="drink-item"><span>Jagger Bomb</span><strong id="drinkJ">0</strong></div>
+            <div class="drink-item"><span>Whisky</span><strong id="drinkW">0</strong></div>
+          </div>
+
+          <div class="mood-title">Mood of the day</div>
+          <div id="paonMood" class="paon-mood"></div>
+
+          <button id="closeResult" class="btn close-btn" aria-label="Fermer le résultat">OK</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js" defer></script>
 </body>
 </html>

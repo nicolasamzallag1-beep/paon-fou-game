@@ -13,21 +13,22 @@
       <img src="paoncover.PNG" alt="Couverture du jeu Ara Ara, Excusez Moi !" class="cover" />
       <h1 class="title">Ara Ara, Excusez Moi !</h1>
       <p class="subtitle">Didier — le paon fou après 18h</p>
-      <button id="enterBtn" type="button" class="btn primary" aria-label="Entrer dans le jeu">Entrer</button>
+      <!-- fallback onclick calls enterGame (defined below). app.js will override with its own logic -->
+      <button id="enterBtn" type="button" class="btn primary" onclick="enterGame()" aria-label="Entrer dans le jeu">Entrer</button>
     </section>
 
     <!-- Jeu -->
     <section id="game" class="screen hidden" aria-label="Jeu de la roue du destin">
       <header class="game-header">
         <h2>Ara Ara, Excusez Moi !</h2>
-        <button id="restartBtn" type="button" class="btn small" aria-label="Retour à la page d'accueil">Retour</button>
+        <button id="restartBtn" type="button" class="btn small" onclick="restartGame()" aria-label="Retour à l'accueil">Retour</button>
       </header>
 
       <main class="game-main">
         <div class="wheel-container">
           <canvas id="wheel" width="360" height="360" role="img" aria-label="Roue du destin"></canvas>
           <div id="wheelPointer" class="pointer" aria-hidden="true">▼</div>
-          <button id="spinBtn" type="button" class="btn primary spin-btn" aria-label="Lancer la roue">Lancer la roue</button>
+          <button id="spinBtn" type="button" class="btn primary spin-btn" onclick="spinGame()" aria-label="Lancer la roue">Lancer la roue</button>
         </div>
 
         <section id="resultSection" class="result-section hidden" aria-live="polite" aria-atomic="true">
@@ -41,7 +42,7 @@
           </div>
 
           <div id="paonLevel" class="paon-level"></div>
-          <button id="nextBtn" type="button" class="btn" aria-label="Continuer">Ok</button>
+          <button id="nextBtn" type="button" class="btn" onclick="nextResult()" aria-label="Continuer">Ok</button>
         </section>
 
         <section id="rules" class="rules">
@@ -52,6 +53,45 @@
       </main>
     </section>
   </div>
+
+  <!-- Fallback functions: exécutées si app.js ne s'est pas encore chargé ou s'il y a une erreur.
+       app.js remplacera ces fonctions par des versions complètes une fois chargé. -->
+  <script>
+    if (!window.enterGame) {
+      window.enterGame = function() {
+        try {
+          const home = document.getElementById('home');
+          const game = document.getElementById('game');
+          if (home && game) {
+            home.classList.add('hidden');
+            game.classList.remove('hidden');
+            // try focus spin
+            const spin = document.getElementById('spinBtn');
+            if (spin) spin.focus();
+          }
+        } catch(e) { console.warn('Fallback enterGame error', e); }
+      };
+    }
+    if (!window.restartGame) {
+      window.restartGame = function(){ location.reload(); };
+    }
+    if (!window.spinGame) {
+      window.spinGame = function(){
+        // minimal feedback if full logic not loaded
+        const btn = document.getElementById('spinBtn');
+        if (btn) {
+          btn.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-6px)' }, { transform: 'translateY(0)' }], { duration: 260 });
+        }
+        console.warn('spinGame fallback: game logic not yet loaded.');
+      };
+    }
+    if (!window.nextResult) {
+      window.nextResult = function(){
+        const res = document.getElementById('resultSection');
+        if(res) res.classList.add('hidden');
+      };
+    }
+  </script>
 
   <script src="app.js" defer></script>
 </body>

@@ -1,15 +1,12 @@
 {
-  "title": "Ara Ara, Excusez Moi !",
-  "cover": "paoncover.PNG",
-  "initialImages": ["paon9.PNG", "paon10.PNG"],
   "choices": [
-    { "id":1, "text":"Rentrer chez lui se reposer", "image":"paon3.PNG",  "emoji":"😴", "p":0,  "j":0,  "w":0  },
-    { "id":2, "text":"Rentrer pour geeker toute la nuit",  "image":"paon7.PNG",  "emoji":"🤓", "p":0,  "j":18, "w":0  },
-    { "id":3, "text":"Réunion au Cavendish",                "image":"paon5.PNG",  "emoji":"💼", "p":0,  "j":0,  "w":16 },
-    { "id":4, "text":"Faire la fête avec Vince",           "image":"paon11.PNG", "emoji":"💃", "p":22, "j":12, "w":12 },
-    { "id":5, "text":"Soirée tranquille sans alcool",     "image":"paon10.PNG", "emoji":"🕶️", "p":0,  "j":0,  "w":0  },
-    { "id":6, "text":"Soirée de fou",                     "image":"paon6.PNG",  "emoji":"🎉", "p":30, "j":20, "w":18 },
-    { "id":7, "text":"After chez Manon",                  "image":"paon1.PNG",  "emoji":"😇", "p":10, "j":8,  "w":6  },
-    { "id":8, "text":"Se finir avec El Predator",         "image":"paon4.PNG",  "emoji":"😭", "p":40, "j":0,  "w":30 }
+    { "text": "Repos", "image": "paon3.PNG", "emoji": "😴", "p": 0, "j": 0, "w": 0 },
+    { "text": "Geek", "image": "paon7.PNG", "emoji": "🤓", "p": 0, "j": 15, "w": 0 },
+    { "text": "Cavendish", "image": "paon5.PNG", "emoji": "💼", "p": 0, "j": 0, "w": 12 },
+    { "text": "Vince", "image": "paon11.PNG", "emoji": "💃", "p": 20, "j": 10, "w": 10 },
+    { "text": "Tranquille", "image": "paon10.PNG", "emoji": "🕶️", "p": 0, "j": 0, "w": 0 },
+    { "text": "FOU", "image": "paon6.PNG", "emoji": "🎉", "p": 30, "j": 20, "w": 20 },
+    { "text": "Manon", "image": "paon1.PNG", "emoji": "😇", "p": 10, "j": 10, "w": 5 },
+    { "text": "Predator", "image": "paon4.PNG", "emoji": "😭", "p": 40, "j": 0, "w": 30 }
   ]
 }

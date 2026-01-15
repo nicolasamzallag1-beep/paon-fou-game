@@ -1,55 +1,45 @@
-:root{
-  --bg1:#0b0820;
-  --bg2:#1a1430;
-  --accent:#a07aff;
-  --card:#151425;
-  --muted:#cfc5ff;
-  --gold:#ffd87a;
+:root {
+  --bg1: #0b0820;
+  --bg2: #1a1430;
+  --accent: #a07aff;
+  --card: #151425;
+  --muted: #cfc5ff;
+  --gold: #ffd87a;
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
-html,body,#app{height:100%;width:100%;font-family:Inter, "Segoe UI", Roboto, Arial, sans-serif;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:18px}
-.screen.hidden{display:none!important}
-.cover{width:90vw;max-width:520px;border-radius:14px;box-shadow:0 20px 60px rgba(160,122,255,0.2);object-fit:cover}
-.title{font-size:2.6rem;color:var(--accent);text-shadow:0 0 18px rgba(160,122,255,0.12)}
-.subtitle{color:var(--muted);font-style:italic}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #app { height: 100%; width: 100%; font-family: 'Segoe UI', Roboto, sans-serif; background: linear-gradient(180deg, var(--bg1), var(--bg2)); color: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
-/* Buttons */
-.btn{background:linear-gradient(180deg,var(--accent),#7a5aff);border:none;color:#fff;padding:12px 22px;border-radius:12px;font-weight:800;cursor:pointer;box-shadow:0 8px 30px rgba(160,122,255,0.18)}
-.btn.small{padding:8px 12px;border-radius:10px;background:transparent;border:1px solid rgba(160,122,255,0.12);color:var(--accent);box-shadow:none}
-.btn.spin{margin-top:12px;border-radius:28px;padding:12px 28px;font-size:1rem}
+.screen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; gap: 15px; }
+.screen.hidden { display: none !important; }
 
-/* prompt */
-.top-prompt{width:100%;display:flex;justify-content:center}
-.prompt-card{display:flex;align-items:center;gap:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:12px;border-radius:12px;border:1px solid rgba(160,122,255,0.06);max-width:780px;width:90%}
-.prompt-img img{width:96px;height:96px;border-radius:10px;object-fit:cover;box-shadow:0 6px 30px rgba(160,122,255,0.08)}
-.prompt-text .time{font-weight:900;color:var(--muted);opacity:0.9}
-.prompt-text .question{font-weight:700;font-size:1.05rem;color:#fff}
+.cover { width: 85vw; max-width: 400px; border-radius: 15px; box-shadow: 0 10px 40px rgba(160, 122, 255, 0.4); }
+.title { font-size: 2rem; color: var(--accent); text-align: center; margin-top: 10px; }
+.subtitle { color: var(--muted); font-style: italic; font-size: 0.9rem; }
 
-/* wheel */
-.wheel-area{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:6px}
-.pointer{font-size:30px;color:var(--accent);text-shadow:0 0 12px rgba(160,122,255,0.18);margin-top:-12px;z-index:30}
-#wheel{width:360px;height:360px;border-radius:50%;background:radial-gradient(circle at center,#2b1c5e,#130721);box-shadow:inset 0 0 30px rgba(0,0,0,0.6);touch-action:none}
+.btn { background: linear-gradient(135deg, var(--accent), #7a5aff); border: none; color: #fff; padding: 14px 35px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
+.btn:active { transform: scale(0.95); }
+.btn.small { padding: 6px 12px; background: transparent; border: 1px solid var(--accent); color: var(--accent); font-size: 0.8rem; }
 
-/* rules */
-.rules{max-width:760px;text-align:center;color:var(--muted);opacity:0.95;padding:6px 10px;font-size:0.95rem}
+.wheel-area { display: flex; flex-direction: column; align-items: center; position: relative; margin-top: 10px; }
+.pointer { font-size: 35px; color: var(--accent); z-index: 10; margin-bottom: -20px; filter: drop-shadow(0 0 10px var(--accent)); }
+#wheel { width: 300px; height: 300px; border-radius: 50%; border: 5px solid var(--card); box-shadow: 0 0 30px rgba(0,0,0,0.5); transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); }
 
-/* result overlay */
-.result-panel{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(6,6,20,0.76);visibility:hidden;opacity:0;transition:opacity .22s ease}
-.result-panel[aria-hidden="false"]{visibility:visible;opacity:1}
-.result-card{width:92%;max-width:420px;background:linear-gradient(180deg,var(--card),#20183a);border-radius:14px;padding:18px;border:2px solid rgba(160,122,255,0.12);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.6)}
-.result-img{width:100%;height:auto;border-radius:10px;object-fit:cover;margin-bottom:12px;max-height:260px}
-.result-emoji{font-size:48px;margin-bottom:8px;text-shadow:0 0 18px rgba(160,122,255,0.12)}
-.result-text{font-size:1.2rem;font-weight:800;margin-bottom:8px}
-.drinks-list{display:flex;flex-direction:column;gap:8px;margin:10px 0}
-.drink-item{display:flex;justify-content:space-between;padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);font-weight:800}
-.paon-mood{margin-top:10px;color:var(--gold);font-weight:900;letter-spacing:0.6px}
+.result-panel { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 100; padding: 15px; }
+.result-panel.show { display: flex; }
+.result-card { background: var(--card); width: 100%; max-width: 380px; border-radius: 25px; padding: 20px; text-align: center; border: 1px solid rgba(160, 122, 255, 0.3); box-shadow: 0 0 50px rgba(0,0,0,1); }
 
-/* small screens */
-@media (max-width:720px){
-  #wheel{width:300px;height:300px}
-  .cover{max-width:360px}
-  .prompt-img img{width:72px;height:72px}
-  .result-card{padding:14px}
-}
+/* Image entière et centrée */
+.result-img { width: 100%; max-height: 220px; border-radius: 15px; margin-bottom: 10px; object-fit: contain; background: #000; }
+
+.result-emoji { font-size: 45px; margin-bottom: 5px; }
+.result-text { font-size: 1.2rem; font-weight: 800; margin-bottom: 12px; color: var(--accent); }
+
+.drinks-list { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 12px; margin-bottom: 15px; }
+.drink-item { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 5px; color: var(--muted); }
+.drink-item strong { color: #fff; font-size: 0.9rem; }
+
+.mood-title { color: var(--gold); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; display: block; font-weight: bold; }
+.paon-mood { color: #fff; font-weight: 500; font-size: 0.9rem; line-height: 1.4; padding: 0 5px; font-style: italic; }
+
+#closeResult { margin-top: 20px; width: 100%; }

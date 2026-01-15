@@ -5,14 +5,61 @@
   "initialPrompt": "Que fait le paon fou ce soir ?",
   "initialImages": ["paon9.PNG", "paon10.PNG"],
   "choices": [
-    { "id": 1, "text": "Rentrer chez lui se reposer", "image": "paon1.PNG" },
-    { "id": 2, "text": "Rentrer pour geeker toute la nuit", "image": "paon7.PNG" },
-    { "id": 3, "text": "Réunion au Cavendish", "image": "paon5.PNG" },
-    { "id": 4, "text": "Faire la fête avec Vince", "image": "paon11.PNG" },
-    { "id": 5, "text": "Soirée tranquille sans alcool", "image": "paon3.PNG" },
-    { "id": 6, "text": "Soirée de fou", "image": "paon6.PNG" },
-    { "id": 7, "text": "After chez Manon", "image": "paon1.PNG" },
-    { "id": 8, "text": "Se finir avec El Predator", "image": "paon4.PNG" }
-  ],
-  "drinks": ["Pinte de Mango", "Jagger Bomb", "Whisky"]
+    {
+      "id": 1,
+      "text": "Rentrer chez lui se reposer",
+      "image": "paon1.PNG",
+      "emoji": "😴",
+      "drinks": { "pinte": 0, "jagger": 0, "whisky": 0 }
+    },
+    {
+      "id": 2,
+      "text": "Rentrer pour geeker toute la nuit",
+      "image": "paon7.PNG",
+      "emoji": "🤓",
+      "drinks": { "pinte": 0, "jagger": 1, "whisky": 0 }
+    },
+    {
+      "id": 3,
+      "text": "Réunion au Cavendish",
+      "image": "paon5.PNG",
+      "emoji": "💼",
+      "drinks": { "pinte": 0, "jagger": 0, "whisky": 1 }
+    },
+    {
+      "id": 4,
+      "text": "Faire la fête avec Vince",
+      "image": "paon11.PNG",
+      "emoji": "💃",
+      "drinks": { "pinte": 2, "jagger": 1, "whisky": 1 }
+    },
+    {
+      "id": 5,
+      "text": "Soirée tranquille sans alcool",
+      "image": "paon3.PNG",
+      "emoji": "🕶️",
+      "drinks": { "pinte": 0, "jagger": 0, "whisky": 0 }
+    },
+    {
+      "id": 6,
+      "text": "Soirée de fou",
+      "image": "paon6.PNG",
+      "emoji": "🎉",
+      "drinks": { "pinte": 3, "jagger": 2, "whisky": 2 }
+    },
+    {
+      "id": 7,
+      "text": "After chez Manon",
+      "image": "paon1.PNG",
+      "emoji": "😇",
+      "drinks": { "pinte": 1, "jagger": 1, "whisky": 0 }
+    },
+    {
+      "id": 8,
+      "text": "Se finir avec El Predator",
+      "image": "paon4.PNG",
+      "emoji": "😭",
+      "drinks": { "pinte": 4, "jagger": 0, "whisky": 3 }
+    }
+  ]
 }

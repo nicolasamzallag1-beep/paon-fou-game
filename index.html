@@ -2,56 +2,83 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Ara Ara, Excusez Moi !</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div id="app">
-    <!-- Homepage -->
-    <section id="home" class="screen active" aria-label="Page d'accueil">
-      <img src="paoncover.PNG" alt="Couverture du jeu Ara Ara, Excusez Moi !" class="cover" />
-      <h1 class="title">Ara Ara, Excusez Moi !</h1>
-      <p class="subtitle">Didier — le paon fou après 18h</p>
-      <button id="enterBtn" type="button" class="btn primary" aria-label="Entrer dans le jeu">Entrer</button>
+    <!-- HOMEPAGE -->
+    <section id="home" class="screen active" aria-label="Accueil">
+      <div class="home-inner">
+        <img class="cover" src="paoncover.PNG" alt="Paon cover" />
+        <h1 class="title">Ara Ara, Excusez Moi !</h1>
+        <p class="subtitle">Didier — le paon fou après 18h</p>
+        <button id="enterBtn" type="button" class="btn primary">Entrer</button>
+      </div>
     </section>
 
-    <!-- Jeu -->
-    <section id="game" class="screen hidden" aria-label="Jeu de la roue du destin">
+    <!-- GAME -->
+    <section id="game" class="screen hidden" aria-label="Jeu">
       <header class="game-header">
-        <button id="restartBtn" type="button" class="btn small" aria-label="Retour à la page d'accueil">Retour</button>
-        <h2>Ara Ara, Excusez Moi !</h2>
+        <button id="backBtn" type="button" class="btn ghost">← Retour</button>
+        <div class="header-title">Ara Ara — Le Paon</div>
       </header>
 
       <main class="game-main">
-        <div class="wheel-container">
-          <canvas id="wheel" role="img" aria-label="Roue du destin"></canvas>
-          <div id="wheelPointer" class="pointer" aria-hidden="true">▼</div>
-          <button id="spinBtn" type="button" class="btn primary spin-btn" aria-label="Lancer la roue">Lancer la roue</button>
+        <div class="wheel-wrap">
+          <div id="pointer" class="pointer" aria-hidden="true">▼</div>
+          <canvas id="wheel" aria-label="Roue du destin"></canvas>
+          <button id="spinBtn" type="button" class="btn spin">Lancer la roue</button>
         </div>
 
-        <section id="resultSection" class="result-section hidden" aria-live="polite" aria-atomic="true">
-          <img id="resultImage" src="" alt="" class="result-img" />
-          <h3 id="resultText" class="result-text"></h3>
-          <div id="resultEmoji" class="result-emoji"></div>
+        <aside class="side-info">
+          <div class="rules">
+            <h3>Règles</h3>
+            <p>Chaque résultat ajoute des verres au compteur de Didier. Le "Mood of the day" change aléatoirement selon le total.</p>
+            <p>Appuie sur "Lancer la roue" pour décider de la soirée.</p>
+          </div>
+        </aside>
+      </main>
 
-          <div class="drinks">
-            <h4>Boissons</h4>
-            <div id="drinksList" class="drinks-list"></div>
+      <!-- RESULT PANEL (overlay) -->
+      <div id="resultPanel" class="result-panel hidden" role="dialog" aria-live="polite">
+        <div class="result-card">
+          <img id="resultImg" class="result-img" src="" alt="" />
+          <div class="result-emoji" id="resultEmoji"></div>
+          <h2 id="resultTitle"></h2>
+
+          <div class="drinks-list">
+            <div class="drink"><span>Pinte de Mango</span><span id="dP">0</span></div>
+            <div class="drink"><span>Jagger Bomb</span><span id="dJ">0</span></div>
+            <div class="drink"><span>Whisky</span><span id="dW">0</span></div>
           </div>
 
-          <div id="paonLevel" class="paon-level"></div>
-          <button id="nextBtn" type="button" class="btn" aria-label="Continuer">Ok</button>
-        </section>
+          <div class="mood-area">
+            <div class="mood-label" id="moodLabel">Mood: —</div>
+            <div class="mood-phrase" id="moodPhrase">Phrase du jour...</div>
+          </div>
 
-        <section id="rules" class="rules">
-          <h4>Règles du jeu</h4>
-          <p>Choisis ton destin en lançant la roue. Chaque choix influence le mood de Didier et sa consommation.</p>
-          <p>Plus il boit, plus le paon fou se réveille... Prends garde !</p>
-        </section>
-      </main>
+          <div class="result-actions">
+            <button id="closeResult" class="btn">Ok</button>
+          </div>
+        </div>
+      </div>
     </section>
   </div>
+
+  <!-- Inline fallback minimal : ensures "Entrer" works even if app.js fails to load -->
+  <script>
+    (function(){
+      const enter = document.getElementById('enterBtn');
+      if (enter && !enter.dataset.bound) {
+        enter.addEventListener('click', () => {
+          document.getElementById('home').classList.add('hidden');
+          document.getElementById('game').classList.remove('hidden');
+        });
+      }
+    })();
+  </script>
 
   <script src="app.js" defer></script>
 </body>

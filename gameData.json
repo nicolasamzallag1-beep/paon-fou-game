@@ -4,61 +4,13 @@
   "initialPrompt": "Que fait le paon fou ce soir ?",
   "initialImages": ["paon9.PNG", "paon10.PNG"],
   "choices": [
-    {
-      "id": 1,
-      "text": "Rentrer chez lui se reposer",
-      "image": "paon3.PNG",
-      "emoji": "😴",
-      "drinks": { "pinte": 0, "jagger": 0, "whisky": 0 }
-    },
-    {
-      "id": 2,
-      "text": "Rentrer pour geeker toute la nuit",
-      "image": "paon7.PNG",
-      "emoji": "🤓",
-      "drinks": { "pinte": 0, "jagger": 18, "whisky": 0 }
-    },
-    {
-      "id": 3,
-      "text": "Réunion au Cavendish",
-      "image": "paon5.PNG",
-      "emoji": "💼",
-      "drinks": { "pinte": 0, "jagger": 0, "whisky": 16 }
-    },
-    {
-      "id": 4,
-      "text": "Faire la fête avec Vince",
-      "image": "paon11.PNG",
-      "emoji": "💃",
-      "drinks": { "pinte": 22, "jagger": 12, "whisky": 12 }
-    },
-    {
-      "id": 5,
-      "text": "Soirée tranquille sans alcool",
-      "image": "paon10.PNG",
-      "emoji": "🕶️",
-      "drinks": { "pinte": 0, "jagger": 0, "whisky": 0 }
-    },
-    {
-      "id": 6,
-      "text": "Soirée de fou",
-      "image": "paon6.PNG",
-      "emoji": "🎉",
-      "drinks": { "pinte": 30, "jagger": 20, "whisky": 18 }
-    },
-    {
-      "id": 7,
-      "text": "After chez Manon",
-      "image": "paon1.PNG",
-      "emoji": "😇",
-      "drinks": { "pinte": 10, "jagger": 10, "whisky": 5 }
-    },
-    {
-      "id": 8,
-      "text": "Se finir avec El Predator",
-      "image": "paon4.PNG",
-      "emoji": "😭",
-      "drinks": { "pinte": 40, "jagger": 0, "whisky": 30 }
-    }
+    { "id": 1, "text": "Rentrer chez lui se reposer", "image": "paon1.PNG",  "emoji": "😴", "drinks": { "pinte": 0,  "jagger": 0,  "whisky": 0 } },
+    { "id": 2, "text": "Rentrer pour geeker toute la nuit", "image": "paon7.PNG",  "emoji": "🤓", "drinks": { "pinte": 0,  "jagger": 28, "whisky": 0 } },
+    { "id": 3, "text": "Réunion au Cavendish", "image": "paon5.PNG",  "emoji": "💼", "drinks": { "pinte": 0,  "jagger": 0,  "whisky": 22 } },
+    { "id": 4, "text": "Faire la fête avec Vince", "image": "paon11.PNG", "emoji": "💃", "drinks": { "pinte": 28, "jagger": 18, "whisky": 16 } },
+    { "id": 5, "text": "Soirée tranquille sans alcool", "image": "paon3.PNG",  "emoji": "🕶️", "drinks": { "pinte": 0,  "jagger": 0,  "whisky": 0 } },
+    { "id": 6, "text": "Soirée de fou", "image": "paon6.PNG",  "emoji": "🎉", "drinks": { "pinte": 40, "jagger": 28, "whisky": 22 } },
+    { "id": 7, "text": "After chez Manon", "image": "paon1.PNG",  "emoji": "😇", "drinks": { "pinte": 16, "jagger": 12, "whisky": 6 } },
+    { "id": 8, "text": "Se finir avec El Predator", "image": "paon4.PNG",  "emoji": "😭", "drinks": { "pinte": 48, "jagger": 0,  "whisky": 36 } }
   ]
 }

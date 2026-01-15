@@ -2,22 +2,22 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Ara Ara, Excusez Moi !</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div id="app">
-    <!-- Cover / Home -->
+    <!-- HOME -->
     <section id="home" class="panel active">
       <img src="paoncover.PNG" alt="Paon Cover" class="cover" />
       <h1 class="title">Ara Ara, Excusez Moi !</h1>
-      <p class="subtitle">Didier — le paon fou après 18h</p>
+      <p class="subtitle">Didier — le paon qui bascule après 18h</p>
       <button id="enterBtn" class="btn primary">Entrer</button>
     </section>
 
-    <!-- Game -->
-    <section id="game" class="panel hidden">
+    <!-- GAME -->
+    <section id="game" class="panel hidden" aria-hidden="true">
       <header class="game-header">
         <div class="left">
           <h2 id="gameTitle">Ara Ara, Excusez Moi !</h2>
@@ -31,40 +31,46 @@
       <main class="game-main">
         <div class="left-col">
           <div id="prompt" class="prompt">Que fait le paon fou ce soir ?</div>
-          <div id="alternator" class="alternator">
+
+          <div id="alternator" class="alternator" aria-hidden="true">
             <img id="altImgA" src="paon9.PNG" alt="" class="altImg show" />
             <img id="altImgB" src="paon10.PNG" alt="" class="altImg" />
           </div>
-          <div class="wheel-wrap">
-            <canvas id="wheel" width="360" height="360" class="wheel-canvas"></canvas>
+
+          <div class="wheel-wrap" id="wheelWrap">
+            <canvas id="wheel" class="wheel-canvas" width="360" height="360" role="img" aria-label="Roue du destin"></canvas>
             <div id="wheelPointer" class="pointer">▼</div>
           </div>
+
           <div class="controls">
             <button id="spinBtn" class="btn primary">Lancer la roue</button>
           </div>
         </div>
 
         <div class="right-col">
-          <div id="resultCard" class="result-card hidden">
+          <div id="resultCard" class="result-card hidden" aria-live="polite">
             <img id="resultImage" src="" alt="" class="result-img" />
             <h3 id="resultText" class="result-text"></h3>
             <div id="resultEmoji" class="result-emoji"></div>
+
             <div class="drinks">
               <h4>Boissons</h4>
               <div id="drinksList" class="drinks-list"></div>
             </div>
+
             <div id="paonLevel" class="paon-level"></div>
             <button id="nextBtn" class="btn">Ok</button>
           </div>
 
           <div id="moodPanel" class="info-panel">
             <h4>Mood of the day</h4>
-            <p id="moodText" class="mood-text">Didier est calme et sérieux en journée, mais ce soir...</p>
+            <p id="moodText" class="mood-text">Didier est tranquille en journée. Ce soir, tout peut arriver...</p>
           </div>
         </div>
       </main>
     </section>
   </div>
+
   <script src="app.js" defer></script>
 </body>
 </html>

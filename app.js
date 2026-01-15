@@ -3,267 +3,324 @@ document.addEventListener('DOMContentLoaded', () => {
   const game = document.getElementById('game');
   const enterBtn = document.getElementById('enterBtn');
   const backBtn = document.getElementById('backBtn');
-  const wheelCanvas = document.getElementById('wheel');
+  const wheel = document.getElementById('wheel');
   const spinBtn = document.getElementById('spinBtn');
   const resultPanel = document.getElementById('resultPanel');
   const resultImage = document.getElementById('resultImage');
   const resultText = document.getElementById('resultText');
   const resultEmoji = document.getElementById('resultEmoji');
-  const drinkP = document.querySelector('#resultPanel #drinkP');
-  const drinkJ = document.querySelector('#resultPanel #drinkJ');
-  const drinkW = document.querySelector('#resultPanel #drinkW');
+  const drinkP = document.getElementById('drinkP');
+  const drinkJ = document.getElementById('drinkJ');
+  const drinkW = document.getElementById('drinkW');
   const paonMood = document.getElementById('paonMood');
   const closeResult = document.getElementById('closeResult');
 
   let gameData = null;
-  let wheelAngle = 0;
-  let isSpinning = false;
+  let preloadedImages = {};
+  let bufferCanvas = null;
+  let bufferCtx = null;
+  let ctx = wheel.getContext('2d');
+  let angle = 0;
+  let spinning = false;
 
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-  function playTone(freq, type = 'sine', dur = 0.08, vol = 0.08) {
+  // Audio context
+  let audioCtx = null;
+  function ensureAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  function playTone(freq, duration = 0.08, type = 'sine', volume = 0.07) {
     try {
+      ensureAudio();
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = type;
       osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-      gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+      gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
       osc.connect(gain);
       gain.connect(audioCtx.destination);
       osc.start();
-      osc.stop(audioCtx.currentTime + dur);
+      osc.stop(audioCtx.currentTime + duration + 0.02);
     } catch (e) {
       console.warn('Audio error', e);
     }
   }
 
-  function playClick() {
-    playTone(820 + Math.random() * 360, 'triangle', 0.05, 0.05);
+  // Preload images
+  async function preloadImages(names) {
+    const promises = names.map(name => new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => { preloadedImages[name] = img; resolve({ name, ok: true }); };
+      img.onerror = () => { console.warn('Image failed to load:', name); preloadedImages[name] = null; resolve({ name, ok: false }); };
+      img.src = name;
+    }));
+    return Promise.all(promises);
   }
 
-  function playResult() {
-    playTone(420, 'square', 0.18, 0.12);
-    setTimeout(() => playTone(620, 'sawtooth', 0.16, 0.09), 220);
-  }
-
-  enterBtn.addEventListener('click', () => {
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    home.classList.add('hidden');
-    game.classList.remove('hidden');
-    setTimeout(() => spinBtn.focus(), 120);
-    playTone(460, 'sine', 0.12, 0.08);
-  });
-
-  backBtn.addEventListener('click', () => {
-    location.reload();
-  });
-
-  spinBtn.addEventListener('click', () => {
-    if (!gameData || !gameData.choices || gameData.choices.length === 0) {
-      console.warn('gameData not ready yet');
-      spinBtn.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-6px)' }, { transform: 'translateY(0)' }], { duration: 300 });
-      return;
-    }
-    startSpin();
-  });
-
-  closeResult.addEventListener('click', () => {
-    resultPanel.classList.add('hidden');
-  });
-
-  async function fetchGameData() {
+  // Load game data and preload images
+  async function loadGameData() {
     try {
-      const res = await fetch('gameData.json');
-      if (!res.ok) throw new Error('status ' + res.status);
-      return await res.json();
+      const res = await fetch('gameData.json', { cache: 'no-cache' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      gameData = await res.json();
+
+      const imagesToLoad = new Set();
+      if (gameData.coverImage) imagesToLoad.add(gameData.coverImage);
+      if (Array.isArray(gameData.initialImages)) gameData.initialImages.forEach(i => imagesToLoad.add(i));
+      (gameData.choices || []).forEach(c => { if (c.image) imagesToLoad.add(c.image); });
+
+      await preloadImages(Array.from(imagesToLoad));
     } catch (e) {
-      console.warn('Impossible de charger gameData.json:', e);
-      return null;
+      console.warn('Failed to load gameData.json, using fallback', e);
+      gameData = {
+        choices: [
+          { text: 'Repos', image: 'paon3.PNG', emoji: '😴', drinks: { pinte: 0, jagger: 0, whisky: 0 } },
+          { text: 'Fête', image: 'paon6.PNG', emoji: '🎉', drinks: { pinte: 20, jagger: 12, whisky: 12 } }
+        ]
+      };
+      await preloadImages(['paon3.PNG', 'paon6.PNG']);
     }
   }
 
-  const ctx = wheelCanvas.getContext('2d');
-
+  // Resize canvas and buffer for DPI
   function resizeCanvas() {
     const dpr = window.devicePixelRatio || 1;
-    const rect = wheelCanvas.getBoundingClientRect();
-    wheelCanvas.width = Math.max(200, Math.floor(rect.width * dpr));
-    wheelCanvas.height = Math.max(200, Math.floor(rect.height * dpr));
+    const rect = wheel.getBoundingClientRect();
+    const width = Math.max(200, Math.round(rect.width));
+    const height = Math.max(200, Math.round(rect.height));
+
+    wheel.width = width * dpr;
+    wheel.height = height * dpr;
+    wheel.style.width = width + 'px';
+    wheel.style.height = height + 'px';
+
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    if (gameData && gameData.choices) drawWheel();
+
+    // Buffer canvas for static wheel
+    bufferCanvas = document.createElement('canvas');
+    bufferCanvas.width = wheel.width;
+    bufferCanvas.height = wheel.height;
+    bufferCanvas.style.width = wheel.style.width;
+    bufferCanvas.style.height = wheel.style.height;
+    bufferCtx = bufferCanvas.getContext('2d');
+    bufferCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    drawStaticWheel();
+    renderWheel();
   }
 
-  window.addEventListener('resize', resizeCanvas);
-
-  function drawWheel() {
+  // Draw static wheel on buffer canvas
+  function drawStaticWheel() {
+    if (!bufferCtx || !gameData) return;
     const choices = gameData.choices || [];
-    const n = Math.max(1, choices.length);
-    const cw = wheelCanvas.width;
-    const ch = wheelCanvas.height;
-    const cx = cw / (window.devicePixelRatio || 1) / 2;
-    const cy = ch / (window.devicePixelRatio || 1) / 2;
+    const n = choices.length;
+    const dpr = window.devicePixelRatio || 1;
+    const W = bufferCanvas.width / dpr;
+    const H = bufferCanvas.height / dpr;
+    const cx = W / 2;
+    const cy = H / 2;
     const r = Math.min(cx, cy) - 8;
-    const sector = (Math.PI * 2) / n;
+    const sectorAngle = (2 * Math.PI) / n;
 
-    ctx.clearRect(0, 0, cw, ch);
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx + 4, cy + 6, r + 8, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(0,0,0,0.12)';
-    ctx.fill();
-    ctx.restore();
+    bufferCtx.clearRect(0, 0, bufferCanvas.width, bufferCanvas.height);
 
     for (let i = 0; i < n; i++) {
-      const start = i * sector - Math.PI / 2;
-      const end = start + sector;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.arc(cx, cy, r, start, end);
-      ctx.closePath();
-      ctx.fillStyle = i % 2 === 0 ? '#2b1c5e' : '#3b2a78';
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-      ctx.stroke();
+      const startAngle = i * sectorAngle - Math.PI / 2;
+      const endAngle = startAngle + sectorAngle;
 
-      const mid = start + sector / 2;
-      const emoji = choices[i].emoji || '❓';
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.rotate(mid);
-      ctx.font = `${Math.round(r * 0.18)}px serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#f6f0ff';
-      ctx.fillText(emoji, r * 0.6, 0);
-      ctx.restore();
+      // Sector background
+      bufferCtx.beginPath();
+      bufferCtx.moveTo(cx, cy);
+      bufferCtx.arc(cx, cy, r, startAngle, endAngle);
+      bufferCtx.closePath();
+      bufferCtx.fillStyle = i % 2 === 0 ? '#2b1c5e' : '#3b2a78';
+      bufferCtx.fill();
+      bufferCtx.strokeStyle = 'rgba(255,255,255,0.03)';
+      bufferCtx.stroke();
+
+      // Emoji
+      const midAngle = startAngle + sectorAngle / 2;
+      bufferCtx.save();
+      bufferCtx.translate(cx, cy);
+      bufferCtx.rotate(midAngle);
+      bufferCtx.font = `${Math.round(r * 0.14)}px serif`;
+      bufferCtx.textAlign = 'center';
+      bufferCtx.textBaseline = 'middle';
+      bufferCtx.fillStyle = '#fff6ff';
+      bufferCtx.fillText(choices[i].emoji || '❓', r * 0.6, 0);
+      bufferCtx.restore();
     }
 
-    ctx.beginPath();
-    ctx.arc(cx, cy, 48, 0, Math.PI * 2);
-    ctx.fillStyle = '#0b0713';
-    ctx.fill();
-    ctx.fillStyle = '#9db7ff';
-    ctx.font = '700 12px Helvetica, Arial, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('Le destin de Didier', cx, cy + 4);
+    // Center circle
+    bufferCtx.beginPath();
+    bufferCtx.arc(cx, cy, Math.min(56, r * 0.22), 0, 2 * Math.PI);
+    bufferCtx.fillStyle = '#0b0713';
+    bufferCtx.fill();
+    bufferCtx.fillStyle = '#9db7ff';
+    bufferCtx.font = '700 12px Arial';
+    bufferCtx.textAlign = 'center';
+    bufferCtx.fillText('Le destin de Didier', cx, cy + 4);
   }
 
-  function renderRotation(angle) {
+  // Render rotated wheel from buffer
+  function renderWheel() {
+    if (!bufferCanvas) return;
     const dpr = window.devicePixelRatio || 1;
-    const w = wheelCanvas.width / dpr,
-      h = wheelCanvas.height / dpr;
-    ctx.clearRect(0, 0, wheelCanvas.width, wheelCanvas.height);
+    const W = wheel.width / dpr;
+    const H = wheel.height / dpr;
+
+    ctx.clearRect(0, 0, wheel.width, wheel.height);
     ctx.save();
-    ctx.translate(w / 2, h / 2);
+    ctx.translate(W / 2, H / 2);
     ctx.rotate(angle);
-    ctx.translate(-w / 2, -h / 2);
-    drawWheel();
+    ctx.translate(-W / 2, -H / 2);
+    ctx.drawImage(bufferCanvas, 0, 0, wheel.width, wheel.height);
     ctx.restore();
   }
 
+  // Spin animation
   function startSpin() {
-    if (isSpinning) return;
-    if (!gameData || !gameData.choices || gameData.choices.length === 0) return;
-    isSpinning = true;
+    if (spinning || !gameData || !gameData.choices) return;
+    ensureAudio();
+    spinning = true;
+    spinBtn.disabled = true;
+
     const n = gameData.choices.length;
-    const sector = (Math.PI * 2) / n;
+    const sectorAngle = (2 * Math.PI) / n;
     const targetIndex = Math.floor(Math.random() * n);
-    const rotations = 9 + Math.floor(Math.random() * 6);
-    const offset = Math.random() * sector * 0.8 - sector * 0.4;
-    const final = rotations * Math.PI * 2 + targetIndex * sector + sector / 2 + offset;
+    const rotations = 8 + Math.floor(Math.random() * 6);
+    const offset = (Math.random() - 0.5) * sectorAngle * 0.9;
+    const finalAngle = rotations * 2 * Math.PI + targetIndex * sectorAngle + sectorAngle / 2 + offset;
 
-    const start = performance.now();
     const duration = 3200 + Math.floor(Math.random() * 900);
-    const initial = wheelAngle;
-    const target = wheelAngle + final;
-    playSpinSound(duration);
+    const clicks = Math.max(6, Math.floor(duration / 120));
+    for (let i = 0; i < clicks; i++) {
+      setTimeout(() => playTone(700 + Math.random() * 600, 0.03, 'triangle', 0.03), i * 110);
+    }
 
-    function frame(now) {
-      const t = Math.min(1, (now - start) / duration);
+    const startTime = performance.now();
+    const initialAngle = angle;
+    const targetAngle = angle + finalAngle;
+
+    function animate(now) {
+      const elapsed = now - startTime;
+      const t = Math.min(1, elapsed / duration);
       const ease = 1 - Math.pow(1 - t, 3);
-      wheelAngle = initial + (target - initial) * ease;
-      renderRotation(wheelAngle);
-      if (t < 1) requestAnimationFrame(frame);
-      else {
-        isSpinning = false;
-        const normalized = (wheelAngle % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
-        const idx = Math.floor(((normalized + Math.PI / 2) / sector)) % n;
-        const selected = (n - idx) % n;
-        revealResult(selected);
+      angle = initialAngle + (targetAngle - initialAngle) * ease;
+      renderWheel();
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        spinning = false;
+        spinBtn.disabled = false;
+        const normalizedAngle = ((angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+        const idx = Math.floor(((normalizedAngle + Math.PI / 2) / sectorAngle)) % n;
+        const selectedIndex = (n - idx) % n;
+        showResult(selectedIndex);
       }
     }
-    requestAnimationFrame(frame);
+    requestAnimationFrame(animate);
   }
 
-  function playSpinSound(duration) {
-    const count = Math.max(6, Math.floor(duration / 140));
-    for (let i = 0; i < count; i++) {
-      setTimeout(() => playClick(), i * 130);
-    }
+  // Mood text based on drinks total
+  function getMood(total) {
+    if (total <= 0) return 'Calme';
+    if (total <= 20) return 'Éveillé';
+    if (total <= 40) return 'Chaud';
+    return 'PAON FOU !!!';
+  }
+  function getMoodPhrase(total) {
+    if (total <= 0) return "Didier chill, soirée safe.";
+    if (total <= 20) return "Le paon se réchauffe doucement.";
+    if (total <= 40) return "Ça part en freestyle, garde un œil.";
+    return "PAON FOU : souvenirs non garantis.";
   }
 
-  function revealResult(index) {
-    const choice = (gameData.choices && gameData.choices[index]) || null;
+  // Show result overlay
+  function showResult(index) {
+    const choice = gameData.choices[index];
     if (!choice) {
-      console.error('Choice not found', index);
+      console.error('Choice not found for index', index);
       return;
     }
-    playResult();
 
-    const total = (choice.drinks?.pinte || 0) + (choice.drinks?.jagger || 0) + (choice.drinks?.whisky || 0);
+    // Set image src (use preloaded if available)
+    const imgName = choice.image || '';
+    if (preloadedImages[imgName]) {
+      resultImage.src = preloadedImages[imgName].src;
+    } else {
+      resultImage.src = imgName;
+    }
+    resultImage.alt = choice.text || 'Image résultat';
 
-    resultImage.src = choice.image || '';
-    resultImage.alt = choice.text || '';
     resultText.textContent = choice.text || '';
     resultEmoji.textContent = choice.emoji || '';
 
-    drinkP.textContent = choice.drinks?.pinte || 0;
-    drinkJ.textContent = choice.drinks?.jagger || 0;
-    drinkW.textContent = choice.drinks?.whisky || 0;
+    const drinks = choice.drinks || {};
+    const p = drinks.pinte ?? drinks.p ?? 0;
+    const j = drinks.jagger ?? drinks.j ?? 0;
+    const w = drinks.whisky ?? drinks.w ?? 0;
 
-    paonMood.textContent = `Mood: ${paonLevelText(total)} (${total} verres bus)`;
+    drinkP.textContent = p;
+    drinkJ.textContent = j;
+    drinkW.textContent = w;
 
-    resultPanel.classList.remove('hidden');
+    const total = p + j + w;
+    paonMood.textContent = `${getMood(total)} (${total} verres) — ${getMoodPhrase(total)}`;
+
+    resultPanel.setAttribute('aria-hidden', 'false');
+    resultPanel.classList.add('visible');
+
+    playTone(420, 0.18, 'square', 0.12);
+    setTimeout(() => playTone(620, 0.12, 'sawtooth', 0.09), 180);
+
     try {
-      resultImage.animate(
-        [
-          { transform: 'scale(0.92)', filter: 'drop-shadow(0 0 0 #a07aff)' },
-          { transform: 'scale(1)', filter: 'drop-shadow(0 0 22px #a07aff)' }
-        ],
-        { duration: 520, easing: 'ease-out' }
-      );
+      resultImage.animate([{ transform: 'scale(0.96)' }, { transform: 'scale(1)' }], { duration: 420, easing: 'ease-out' });
     } catch (e) {}
   }
 
-  function paonLevelText(total) {
-    if (total <= 0) return 'Calme';
-    if (total <= 12) return 'Éveillé';
-    if (total <= 24) return 'Chaud';
-    return 'PAON FOU !!!';
+  // Hide result overlay
+  function hideResult() {
+    resultPanel.setAttribute('aria-hidden', 'true');
+    resultPanel.classList.remove('visible');
   }
 
-  fetchGameData().then((d) => {
-    gameData = d || {
-      title: 'Ara Ara, Excusez Moi !',
-      initialPrompt: 'Que fait le paon fou ce soir ?',
-      initialImages: ['paon9.PNG', 'paon10.PNG'],
-      choices: []
-    };
-    resizeCanvas();
-    setTimeout(() => renderRotation(wheelAngle), 80);
+  // Event listeners
+  enterBtn.addEventListener('click', () => {
+    try {
+      ensureAudio();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    } catch (e) {}
+    home.classList.add('hidden');
+    game.classList.remove('hidden');
+    enterBtn.style.display = 'none';
+    setTimeout(() => resizeCanvas(), 80);
+    playTone(480, 0.12, 'sine', 0.08);
   });
 
-  function fetchGameData() {
-    return fetch('gameData.json')
-      .then((res) => {
-        if (!res.ok) throw new Error('status ' + res.status);
-        return res.json();
-      })
-      .catch((e) => {
-        console.warn('Impossible de charger gameData.json:', e);
-        return null;
-      });
+  backBtn.addEventListener('click', () => location.reload());
+
+  spinBtn.addEventListener('click', () => {
+    if (!gameData) return;
+    startSpin();
+  });
+
+  closeResult.addEventListener('click', () => hideResult());
+
+  // Resize canvas on window resize
+  window.addEventListener('resize', () => {
+    resizeCanvas();
+    drawStaticWheel();
+    renderWheel();
+  });
+
+  // Initialize
+  async function init() {
+    await loadGameData();
+    resizeCanvas();
+    drawStaticWheel();
+    renderWheel();
   }
+
+  init();
 });

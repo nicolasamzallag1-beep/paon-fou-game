@@ -8,7 +8,7 @@
     {
       "id": 1,
       "text": "Rentrer chez lui se reposer",
-      "image": "paon1.PNG",
+      "image": "paon3.PNG",
       "emoji": "😴",
       "drinks": { "pinte": 0, "jagger": 0, "whisky": 0 }
     },
@@ -36,7 +36,7 @@
     {
       "id": 5,
       "text": "Soirée tranquille sans alcool",
-      "image": "paon3.PNG",
+      "image": "paon10.PNG",
       "emoji": "🕶️",
       "drinks": { "pinte": 0, "jagger": 0, "whisky": 0 }
     },

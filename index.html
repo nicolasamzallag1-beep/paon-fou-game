@@ -1,31 +1,86 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Ara Ara, Excusez Moi !</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="container">
-    <header>
-      <img src="paoncover.PNG" alt="Cover Paon Fou" class="cover-image" />
-      <h1>Ara Ara, Excusez Moi !</h1>
-      <p class="subtitle">Le jeu commence à 18h</p>
-    </header>
+  <div id="app">
+    <!-- Cover / Home -->
+    <section id="home" class="panel active">
+      <img src="paoncover.PNG" alt="Paon Cover" class="cover" />
+      <h1 class="title">Ara Ara, Excusez Moi !</h1>
+      <p class="subtitle">Didier — le paon fou après 18h</p>
+      <button id="enterBtn" class="btn primary">Enter</button>
+    </section>
 
-    <main>
-      <div id="game-area">
-        <p id="prompt" class="prompt">Que fait le paon fou ce soir ?</p>
-        <div id="image-container" class="image-container">
-          <img src="paon9.PNG" alt="Paon 9" class="card-image" />
-          <img src="paon10.PNG" alt="Paon 10" class="card-image" />
+    <!-- Game -->
+    <section id="game" class="panel">
+      <header class="game-header">
+        <div class="left">
+          <h2 id="gameTitle">Ara Ara, Excusez Moi !</h2>
+          <div class="meta">Début : <strong id="startTime">18:00</strong></div>
         </div>
-        <div id="choices" class="choices"></div>
-      </div>
-    </main>
+        <div class="right">
+          <button id="restartBtn" class="btn small">Retour</button>
+        </div>
+      </header>
+
+      <main class="game-main">
+        <div class="left-col">
+          <div id="prompt" class="prompt">Que fait le paon fou ce soir ?</div>
+
+          <!-- alternating images -->
+          <div id="alternator" class="alternator">
+            <img id="altImgA" src="paon9.PNG" alt="" class="altImg show" />
+            <img id="altImgB" src="paon10.PNG" alt="" class="altImg" />
+          </div>
+
+          <!-- Wheel area -->
+          <div class="wheel-wrap">
+            <canvas id="wheel" width="420" height="420" class="wheel-canvas"></canvas>
+            <div id="wheelPointer" class="pointer">▼</div>
+          </div>
+
+          <div class="controls">
+            <button id="spinBtn" class="btn primary">Lancer la roue</button>
+            <button id="fastSpinBtn" class="btn">Spin rapide</button>
+          </div>
+        </div>
+
+        <div class="right-col">
+          <div id="resultCard" class="result-card hidden">
+            <img id="resultImage" src="" alt="" class="result-img" />
+            <h3 id="resultText" class="result-text"></h3>
+            <div id="resultEmoji" class="result-emoji"></div>
+
+            <div class="drinks">
+              <h4>Boissons</h4>
+              <div id="drinksList" class="drinks-list"></div>
+            </div>
+
+            <div id="paonLevel" class="paon-level"></div>
+            <button id="nextBtn" class="btn">Ok</button>
+          </div>
+
+          <div id="infoPanel" class="info-panel">
+            <h4>Univers</h4>
+            <p>Esthétique Paon — style moderne, tech. Jeu trash & décalé.</p>
+            <h4>Boissons</h4>
+            <ul>
+              <li>Pinte de Mango</li>
+              <li>Jagger Bomb</li>
+              <li>Whisky</li>
+            </ul>
+            <div class="hint">Astuce : la roue décide le destin et le nombre de verres.</div>
+          </div>
+        </div>
+      </main>
+    </section>
   </div>
 
-  <script src="app.js"></script>
+  <script src="app.js" defer></script>
 </body>
 </html>

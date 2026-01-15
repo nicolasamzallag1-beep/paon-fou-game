@@ -1,4 +1,4 @@
-// app.js - Jeu "Ara Ara, Excusez Moi !" version pro, fun, trash, animations et sons Web Audio
+// app.js - Jeu "Ara Ara, Excusez Moi !" version moderne, responsive, fun, sons Web Audio
 
 const gameDataUrl = 'gameData.json';
 
@@ -17,7 +17,6 @@ const altB = document.getElementById('altImgB');
 const wheelCanvas = document.getElementById('wheel');
 const ctx = wheelCanvas.getContext('2d');
 const spinBtn = document.getElementById('spinBtn');
-const fastSpinBtn = document.getElementById('fastSpinBtn');
 
 const resultCard = document.getElementById('resultCard');
 const resultImage = document.getElementById('resultImage');
@@ -53,11 +52,9 @@ function playClick() {
 }
 
 function playSpinSound(duration) {
-  let startTime = audioCtx.currentTime;
-  let interval = 0.1;
-  let count = Math.floor(duration / (interval * 1000));
+  let count = Math.floor(duration / 100);
   for (let i = 0; i < count; i++) {
-    setTimeout(() => playClick(), i * interval * 1000);
+    setTimeout(() => playClick(), i * 100);
   }
 }
 
@@ -99,7 +96,6 @@ function initGame(data) {
   }
 
   if (!gameData.choices.length) {
-    // fallback choices
     gameData.choices = [
       { id: 1, text: 'Rentrer chez lui se reposer', image: 'paon1.PNG', emoji: '😴', drinks: { pinte: 0, jagger: 0, whisky: 0 } },
       { id: 2, text: 'Rentrer pour geeker toute la nuit', image: 'paon7.PNG', emoji: '🤓', drinks: { pinte: 0, jagger: 6, whisky: 0 } },
@@ -119,8 +115,7 @@ function initGame(data) {
     location.reload();
   });
 
-  spinBtn.addEventListener('click', () => startSpin(false));
-  fastSpinBtn && fastSpinBtn.addEventListener('click', () => startSpin(true));
+  spinBtn.addEventListener('click', () => startSpin());
 
   nextBtn.addEventListener('click', () => {
     resultCard.classList.add('hidden');
@@ -190,7 +185,7 @@ function drawWheel() {
     ctx.rotate(start + sector / 2);
     ctx.textAlign = 'right';
     ctx.fillStyle = '#f6f0ff';
-    ctx.font = 'bold 14px "Press Start 2P", cursive, Inter, sans-serif';
+    ctx.font = 'bold 14px Helvetica, Arial, sans-serif';
     const label = `${choices[i].emoji || ''} ${choices[i].text}`;
     ctx.fillText(shorten(label, 26), r - 10, 6);
     ctx.restore();
@@ -202,7 +197,7 @@ function drawWheel() {
   ctx.fill();
 
   ctx.fillStyle = '#9db7ff';
-  ctx.font = '700 12px "Press Start 2P", cursive, Inter, sans-serif';
+  ctx.font = '700 12px Helvetica, Arial, sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('Le destin de Didier', cx, cy + 4);
 }
@@ -212,7 +207,7 @@ function shorten(str, max) {
   return str.slice(0, max - 1) + '…';
 }
 
-function startSpin(fast = false) {
+function startSpin() {
   if (isSpinning) return;
   stopAlternator();
   isSpinning = true;
@@ -221,12 +216,12 @@ function startSpin(fast = false) {
   const n = gameData.choices.length;
   const targetIndex = Math.floor(Math.random() * n);
   const sectorAngle = (Math.PI * 2) / n;
-  const rotations = fast ? 6 : 12;
+  const rotations = 12;
   const randomOffset = (Math.random() * sectorAngle * 0.8) - sectorAngle * 0.4;
   const finalAngle = rotations * Math.PI * 2 + targetIndex * sectorAngle + sectorAngle / 2 + randomOffset;
 
   const start = performance.now();
-  const duration = fast ? 1400 : 3600;
+  const duration = 3600;
   const initial = wheelAngle;
   const target = wheelAngle + finalAngle;
 
@@ -308,21 +303,6 @@ function moodDescription(total) {
   if (total <= 12) return "Didier est éveillé, un peu chaud mais toujours maître de lui.";
   if (total <= 24) return "Didier est chaud, la soirée s'anime sérieusement.";
   return "Didier est PAON FOU, la fête est totale, attention aux dégâts !";
-}
-
-function playSpinSound(duration) {
-  let startTime = audioCtx.currentTime;
-  let interval = 0.1;
-  let count = Math.floor(duration / (interval * 1000));
-  for (let i = 0; i < count; i++) {
-    setTimeout(() => playTone(800 + Math.random() * 400, 'triangle', 0.05, 0.05), i * interval * 1000);
-  }
-}
-
-function playResultSound() {
-  playTone(400, 'square', 0.3, 0.15);
-  setTimeout(() => playTone(600, 'sawtooth', 0.2, 0.1), 300);
-  setTimeout(() => playTone(800, 'triangle', 0.15, 0.08), 500);
 }
 
 fetchGameData().then(initGame);

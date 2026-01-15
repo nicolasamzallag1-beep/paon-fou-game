@@ -1,4 +1,4 @@
-// app.js - Jeu "Ara Ara, Excusez Moi !" version moderne, responsive, fun, sons Web Audio
+// app.js - Jeu "Ara Ara, Excusez Moi !" version moderne, responsive, fun, sons Web Audio + musique loufoque
 
 const gameDataUrl = 'gameData.json';
 
@@ -64,6 +64,46 @@ function playResultSound() {
   setTimeout(() => playTone(800, 'triangle', 0.15, 0.08), 500);
 }
 
+// Musique loufoque en boucle
+let musicOscillators = [];
+let musicGain;
+
+function startBackgroundMusic() {
+  if (musicOscillators.length) return; // déjà lancé
+
+  musicGain = audioCtx.createGain();
+  musicGain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+  musicGain.connect(audioCtx.destination);
+
+  const baseFreqs = [220, 277.18, 329.63, 369.99]; // notes A3, C#4, E4, F#4 (paon vibe)
+
+  baseFreqs.forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    osc.connect(musicGain);
+    osc.start();
+
+    // modulation lente de volume
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+    gainNode.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + 1 + i * 0.5);
+    gainNode.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 2 + i * 0.5);
+    gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime + 3 + i * 0.5);
+
+    musicOscillators.push(osc);
+  });
+}
+
+function stopBackgroundMusic() {
+  musicOscillators.forEach(osc => osc.stop());
+  musicOscillators = [];
+  if (musicGain) {
+    musicGain.disconnect();
+    musicGain = null;
+  }
+}
+
 function fetchGameData() {
   return fetch(gameDataUrl)
     .then((res) => {
@@ -109,6 +149,7 @@ function initGame(data) {
     home.classList.add('hidden');
     game.classList.remove('hidden');
     playTone(440, 'sine', 0.5, 0.1);
+    startBackgroundMusic();
   });
 
   restartBtn.addEventListener('click', () => {
@@ -186,8 +227,11 @@ function drawWheel() {
     ctx.textAlign = 'right';
     ctx.fillStyle = '#f6f0ff';
     ctx.font = 'bold 14px Helvetica, Arial, sans-serif';
+
+    // Texte amélioré : découpage en plusieurs lignes si trop long
     const label = `${choices[i].emoji || ''} ${choices[i].text}`;
-    ctx.fillText(shorten(label, 26), r - 10, 6);
+    const maxWidth = r - 20;
+    wrapText(ctx, label, 0, 6, maxWidth, 16);
     ctx.restore();
   }
 
@@ -200,6 +244,28 @@ function drawWheel() {
   ctx.font = '700 12px Helvetica, Arial, sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('Le destin de Didier', cx, cy + 4);
+}
+
+function wrapText(context, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(' ');
+  let line = '';
+  let lines = [];
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + ' ';
+    const metrics = context.measureText(testLine);
+    const testWidth = metrics.width;
+    if (testWidth > maxWidth && n > 0) {
+      lines.push(line);
+      line = words[n] + ' ';
+    } else {
+      line = testLine;
+    }
+  }
+  lines.push(line);
+
+  for (let i = 0; i < lines.length; i++) {
+    context.fillText(lines[i].trim(), x, y + i * lineHeight);
+  }
 }
 
 function shorten(str, max) {

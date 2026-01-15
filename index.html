@@ -7,10 +7,6 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <audio id="bgMusic" src="sounds/bg-music.mp3" loop preload="auto"></audio>
-  <audio id="spinSound" src="sounds/spin-sound.mp3" preload="auto"></audio>
-  <audio id="resultSound" src="sounds/result-sound.mp3" preload="auto"></audio>
-
   <div id="app">
     <!-- Cover / Home -->
     <section id="home" class="panel active">
@@ -35,19 +31,14 @@
       <main class="game-main">
         <div class="left-col">
           <div id="prompt" class="prompt">Que fait le paon fou ce soir ?</div>
-
-          <!-- alternating images -->
           <div id="alternator" class="alternator">
             <img id="altImgA" src="paon9.PNG" alt="" class="altImg show" />
             <img id="altImgB" src="paon10.PNG" alt="" class="altImg" />
           </div>
-
-          <!-- Wheel area -->
           <div class="wheel-wrap">
             <canvas id="wheel" width="420" height="420" class="wheel-canvas"></canvas>
             <div id="wheelPointer" class="pointer">▼</div>
           </div>
-
           <div class="controls">
             <button id="spinBtn" class="btn primary">Lancer la roue</button>
             <button id="fastSpinBtn" class="btn">Spin rapide</button>
@@ -59,12 +50,10 @@
             <img id="resultImage" src="" alt="" class="result-img" />
             <h3 id="resultText" class="result-text"></h3>
             <div id="resultEmoji" class="result-emoji"></div>
-
             <div class="drinks">
               <h4>Boissons</h4>
               <div id="drinksList" class="drinks-list"></div>
             </div>
-
             <div id="paonLevel" class="paon-level"></div>
             <button id="nextBtn" class="btn">Ok</button>
           </div>
@@ -77,7 +66,6 @@
       </main>
     </section>
   </div>
-
   <script src="app.js" defer></script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ara Ara, Excusez Moi !</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -10,16 +10,14 @@
   <div id="app">
     <!-- HOME -->
     <section id="home" class="screen active">
-      <div class="content-wrap">
-        <img src="paoncover.PNG" alt="Paon Cover" class="cover" />
-        <h1 class="title">Ara Ara, Excusez Moi !</h1>
-        <p class="subtitle">Didier — le paon qui bascule après 18h</p>
-        <button id="enterBtn" class="btn primary">Entrer</button>
-      </div>
+      <img src="paoncover.PNG" alt="Paon Cover" class="cover" />
+      <h1 class="title">Ara Ara, Excusez Moi !</h1>
+      <p class="subtitle">Didier — le paon fou après 18h</p>
+      <button id="enterBtn" class="btn primary">Entrer</button>
     </section>
 
     <!-- GAME -->
-    <section id="game" class="screen hidden">
+    <section id="game" class="screen hidden" aria-hidden="true">
       <header class="game-header">
         <div class="header-info">
           <h2>Ara Ara, Excusez Moi !</h2>
@@ -28,41 +26,41 @@
         <button id="restartBtn" class="btn small">Retour</button>
       </header>
 
-      <main class="game-grid">
+      <main class="game-main">
         <div class="game-left">
-          <div class="prompt">Que fait le paon fou ce soir ?</div>
-          <div class="alternator">
-            <img id="altImgA" src="paon9.PNG" class="alt-img show" />
-            <img id="altImgB" src="paon10.PNG" class="alt-img" />
+          <div id="prompt" class="prompt">Que fait le paon fou ce soir ?</div>
+          <div id="alternator" class="alternator" aria-hidden="true">
+            <img id="altImgA" src="paon9.PNG" alt="" class="alt-img show" />
+            <img id="altImgB" src="paon10.PNG" alt="" class="alt-img" />
           </div>
-          <div class="wheel-container">
-            <canvas id="wheel" width="360" height="360"></canvas>
-            <div class="wheel-pointer">▼</div>
+          <div class="wheel-wrap">
+            <canvas id="wheel" width="360" height="360" role="img" aria-label="Roue du destin"></canvas>
+            <div id="wheelPointer" class="pointer">▼</div>
           </div>
           <button id="spinBtn" class="btn primary spin-btn">Lancer la roue</button>
         </div>
 
         <div class="game-right">
-          <div id="resultCard" class="result-card hidden">
-            <img id="resultImage" src="" class="result-img" />
-            <h3 id="resultText"></h3>
-            <div id="resultEmoji" class="emoji-display"></div>
-            <div class="drinks-box">
-              <h4>Consommation</h4>
-              <div id="drinksList"></div>
+          <div id="resultCard" class="result-card hidden" aria-live="polite">
+            <img id="resultImage" src="" alt="" class="result-img" />
+            <h3 id="resultText" class="result-text"></h3>
+            <div id="resultEmoji" class="result-emoji"></div>
+            <div class="drinks">
+              <h4>Boissons</h4>
+              <div id="drinksList" class="drinks-list"></div>
             </div>
-            <div id="paonLevel" class="status-badge"></div>
+            <div id="paonLevel" class="paon-level"></div>
             <button id="nextBtn" class="btn">Ok</button>
           </div>
 
-          <div class="mood-box">
+          <div id="moodPanel" class="info-panel">
             <h4>Mood of the day</h4>
-            <p id="moodText">Didier est tranquille. Pour l'instant...</p>
+            <p id="moodText" class="mood-text">Didier est calme et sérieux en journée, mais ce soir...</p>
           </div>
         </div>
       </main>
     </section>
   </div>
-  <script src="app.js"></script>
+  <script src="app.js" defer></script>
 </body>
 </html>

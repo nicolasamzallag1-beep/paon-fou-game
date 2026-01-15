@@ -1,65 +1,63 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ara Ara, Excusez Moi !</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ara Ara, Excusez Moi !</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <div id="app">
-        <!-- PAGE D'ACCUEIL -->
-        <section id="home" class="screen active">
-            <div class="home-content">
-                <img src="paoncover.PNG" alt="Cover" class="main-cover">
-                <h1 class="main-title">Ara Ara, Excusez Moi !</h1>
-                <p class="main-tagline">Didier — le paon fou après 18h</p>
-                <button id="enterBtn" class="btn-primary">ENTRER</button>
-            </div>
+  <div id="app">
+    <!-- PAGE D'ACCUEIL -->
+    <section id="home" class="screen active" aria-label="Page d'accueil">
+      <img src="paoncover.PNG" alt="Couverture du jeu Ara Ara, Excusez Moi !" class="cover" />
+      <h1 class="title">Ara Ara, Excusez Moi !</h1>
+      <p class="subtitle">Didier — le paon fou après 18h</p>
+      <button id="enterBtn" class="btn primary" aria-label="Entrer dans le jeu">Entrer</button>
+    </section>
+
+    <!-- ÉCRAN DE JEU -->
+    <section id="game" class="screen hidden" aria-label="Jeu de la roue du destin">
+      <header class="game-header">
+        <button id="backBtn" class="btn small" aria-label="Retour à la page d'accueil">Retour</button>
+        <h2 class="game-title">Ara Ara, Excusez Moi !</h2>
+      </header>
+
+      <main class="game-main">
+        <div class="wheel-container">
+          <canvas id="wheel" aria-label="Roue du destin"></canvas>
+          <div id="wheelPointer" class="pointer" aria-hidden="true">▼</div>
+          <button id="spinBtn" class="btn primary spin-btn" aria-label="Lancer la roue">Lancer la roue</button>
+        </div>
+
+        <section class="rules" aria-label="Règles du jeu">
+          <h3>Règles du jeu</h3>
+          <p>Choisis ton destin en lançant la roue. Chaque choix influence le mood de Didier et sa consommation.</p>
+          <p>Plus il boit, plus le paon fou se réveille... Prends garde !</p>
         </section>
+      </main>
 
-        <!-- ZONE DE JEU -->
-        <section id="game" class="screen hidden">
-            <div class="game-layout">
-                <header class="game-nav">
-                    <button id="backBtn" class="btn-back">← Retour</button>
-                    <span class="game-logo">Ara Ara !</span>
-                </header>
+      <!-- OVERLAY RÉSULTAT -->
+      <div id="resultPanel" class="result-panel hidden" role="dialog" aria-live="polite" aria-atomic="true">
+        <div class="result-card">
+          <img id="resultImage" class="result-img" src="" alt="" />
+          <div id="resultEmoji" class="result-emoji"></div>
+          <h3 id="resultText" class="result-text"></h3>
 
-                <div class="wheel-section">
-                    <div class="wheel-pointer">▼</div>
-                    <canvas id="wheelCanvas"></canvas>
-                    <button id="spinBtn" class="btn-spin">LANCER LA ROUE</button>
-                </div>
+          <div class="drinks-list" aria-label="Liste des boissons consommées">
+            <div class="drink-item"><span>Pinte de Mango</span><span id="drinkP">0</span></div>
+            <div class="drink-item"><span>Jagger Bomb</span><span id="drinkJ">0</span></div>
+            <div class="drink-item"><span>Whisky</span><span id="drinkW">0</span></div>
+          </div>
 
-                <div class="rules-box">
-                    <h3>Règles du Paon</h3>
-                    <p>Laisse le destin choisir ta soirée. Attention : plus Didier boit, plus le Paon Fou prend le contrôle.</p>
-                </div>
-            </div>
+          <div id="paonMood" class="paon-mood" aria-label="Mood de Didier"></div>
 
-            <!-- FENÊTRE DE RÉSULTAT (Cachée par défaut) -->
-            <div id="resultOverlay" class="overlay hidden">
-                <div class="result-card">
-                    <img id="resImg" src="" class="res-img">
-                    <h2 id="resTitle"></h2>
-                    <div id="resEmoji" class="res-emoji"></div>
-                    
-                    <div class="drinks-container">
-                        <div class="drink-row"><span>Pinte Mango</span><span id="countP">0</span></div>
-                        <div class="drink-row"><span>Jagger Bomb</span><span id="countJ">0</span></div>
-                        <div class="drink-row"><span>Whisky</span><span id="countW">0</span></div>
-                    </div>
+          <button id="closeResult" class="btn" aria-label="Fermer le résultat">Ok</button>
+        </div>
+      </div>
+    </section>
+  </div>
 
-                    <div class="mood-status">
-                        <span id="moodLabel">Mood: Calme</span>
-                    </div>
-                    
-                    <button id="closeRes" class="btn-primary">OK</button>
-                </div>
-            </div>
-        </section>
-    </div>
-    <script src="app.js"></script>
+  <script src="app.js" defer></script>
 </body>
 </html>

@@ -1,268 +1,191 @@
 :root {
-  --bg-gradient: linear-gradient(135deg, #1a0f3f, #3a1a6a);
-  --accent: #9b59b6;
-  --accent-light: #d6a2e8;
-  --text-light: #f0e6ff;
-  --text-muted: #b3a1c9;
-  --card-bg: #2a1f4a;
-  --shadow: rgba(155, 89, 182, 0.4);
-  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --p-deep: #0a0e27;
+  --p-blue: #005f73;
+  --p-teal: #0a9396;
+  --p-gold: #e9d8a6;
+  --p-purple: #9b59b6;
+  --accent: #00f5d4; /* Cyan néon */
+  --glass: rgba(255, 255, 255, 0.05);
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body, #app {
-  height: 100%;
-  width: 100%;
-  font-family: var(--font-family);
-  background: var(--bg-gradient);
-  color: var(--text-light);
+body {
+  height: 100vh;
+  width: 100vw;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--p-deep);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  position: relative;
 }
 
-.screen {
+/* FOND ANIMÉ PAON */
+body::before {
+  content: "";
   position: absolute;
   inset: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, var(--p-blue) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, var(--p-purple) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, #12183a 0%, var(--p-deep) 100%);
+  z-index: -2;
+}
+
+/* Animation de plumes/bulles en fond */
+.bg-animate {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.ocelle {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, var(--accent) 0%, var(--p-blue) 30%, transparent 70%);
+  border-radius: 50% 0 50% 50%;
+  transform: rotate(45deg);
+  opacity: 0.15;
+  filter: blur(20px);
+  animation: float 15s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) rotate(45deg); }
+  50% { transform: translate(30px, -50px) rotate(60deg); }
+}
+
+/* ÉCRANS */
+.screen {
+  position: absolute;
+  width: 100%;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 20px;
-  gap: 20px;
-  transition: opacity 0.3s ease;
+  padding: 30px;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.screen.hidden {
-  opacity: 0;
-  pointer-events: none;
-  user-select: none;
-}
+.hidden { opacity: 0; pointer-events: none; transform: translateY(20px); }
 
+/* DESIGN MODERNE */
 .cover {
-  width: 90vw;
-  max-width: 480px;
-  border-radius: 20px;
-  box-shadow: 0 15px 40px var(--shadow);
-  object-fit: cover;
+  width: 100%;
+  border-radius: 30px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 20px var(--p-teal);
+  margin-bottom: 20px;
 }
 
 .title {
-  font-size: 2.8rem;
+  font-size: 2.5rem;
   font-weight: 900;
-  color: var(--accent);
-  text-shadow: 0 0 15px var(--accent-light);
-  user-select: none;
+  text-align: center;
+  background: linear-gradient(to right, var(--accent), var(--p-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 30px;
 }
 
 .btn {
-  background: var(--accent);
-  border: none;
-  color: white;
-  padding: 14px 40px;
-  border-radius: 30px;
-  font-weight: 700;
-  font-size: 1.1rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 16px 40px;
+  border-radius: 50px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
   cursor: pointer;
-  box-shadow: 0 8px 20px var(--shadow);
-  transition: background 0.3s ease, transform 0.15s ease;
-  user-select: none;
+  transition: all 0.3s;
 }
 
-.btn:hover {
-  background: var(--accent-light);
-  transform: scale(1.05);
-}
+.btn.primary { background: var(--accent); color: var(--p-deep); border: none; }
+.btn:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--accent); }
 
-.btn:active {
-  transform: scale(0.95);
-}
-
-.btn.small {
-  padding: 8px 18px;
-  font-size: 0.9rem;
-  border-radius: 20px;
-  background: transparent;
-  border: 2px solid var(--accent);
-  color: var(--accent);
-  box-shadow: none;
-}
-
-.header {
-  width: 100%;
-  max-width: 480px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  user-select: none;
-}
-
-.game-title {
-  font-weight: 700;
-  font-size: 1.5rem;
-  color: var(--accent-light);
-  text-shadow: 0 0 10px var(--accent-light);
-}
-
-.main-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
+/* ROUE */
 .wheel-container {
   position: relative;
-  width: 320px;
-  height: 320px;
-  user-select: none;
+  margin: 20px 0;
 }
 
 #wheel {
-  width: 100%;
-  height: 100%;
+  width: 340px;
+  height: 340px;
   border-radius: 50%;
-  box-shadow: 0 0 30px var(--shadow);
-  background: #2a1f4a;
-  transition: transform 3s cubic-bezier(0.33, 1, 0.68, 1);
+  border: 8px solid var(--glass);
+  box-shadow: 0 0 40px rgba(0,0,0,0.5);
 }
 
 .pointer {
   position: absolute;
-  top: -25px;
+  top: -20px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 40px;
-  color: var(--accent-light);
-  text-shadow: 0 0 10px var(--accent-light);
-  user-select: none;
-  pointer-events: none;
+  color: var(--accent);
+  filter: drop-shadow(0 0 10px var(--accent));
 }
 
-.spin {
-  width: 180px;
-  font-weight: 900;
-  letter-spacing: 1.2px;
-}
-
+/* RÉSULTAT GLASSMORPHISM */
 .result-panel {
   position: fixed;
   inset: 0;
-  background: rgba(20, 10, 50, 0.95);
-  display: flex;
+  background: rgba(10, 14, 39, 0.9);
+  backdrop-filter: blur(15px);
+  display: none;
   align-items: center;
   justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 1000;
+  z-index: 100;
 }
 
-.result-panel.show {
-  opacity: 1;
-  pointer-events: auto;
-}
+.result-panel.show { display: flex; }
 
 .result-card {
-  background: var(--card-bg);
-  border-radius: 25px;
-  padding: 25px 30px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 40px;
+  padding: 30px;
+  width: 90%;
   max-width: 400px;
-  width: 90vw;
-  box-shadow: 0 0 40px var(--shadow);
   text-align: center;
-  user-select: none;
 }
 
 .result-img {
   width: 100%;
-  max-height: 260px;
-  border-radius: 20px;
-  object-fit: contain;
-  margin-bottom: 15px;
-  box-shadow: 0 0 20px var(--accent-light);
+  border-radius: 25px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-.result-emoji {
-  font-size: 48px;
-  margin-bottom: 10px;
-}
-
-.result-text {
-  font-size: 1.3rem;
-  font-weight: 800;
-  color: var(--accent-light);
-  margin-bottom: 15px;
-}
+.result-text { font-size: 1.4rem; font-weight: 900; color: var(--accent); margin-bottom: 15px; }
 
 .drinks-list {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 15px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
-
-.drink-item strong {
-  color: var(--text-light);
-  margin-left: 6px;
-}
-
-.mood-title {
-  font-weight: 900;
-  font-size: 0.75rem;
-  color: var(--accent);
-  letter-spacing: 2px;
-  margin-bottom: 6px;
-}
-
-.paon-mood {
-  font-style: italic;
-  font-weight: 600;
-  font-size: 1rem;
-  color: var(--text-light);
-  min-height: 48px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
-.close-btn {
-  width: 100%;
-  font-weight: 900;
-  letter-spacing: 1.2px;
-  padding: 14px 0;
-  border-radius: 30px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 8px 20px var(--shadow);
-  transition: background 0.3s ease, transform 0.15s ease;
+.drink-item {
+  background: rgba(0,0,0,0.3);
+  padding: 10px;
+  border-radius: 15px;
+  font-size: 0.7rem;
 }
 
-.close-btn:hover {
-  background: var(--accent-light);
-  transform: scale(1.05);
-}
+.drink-item strong { display: block; font-size: 1.2rem; color: var(--p-gold); }
 
-.close-btn:active {
-  transform: scale(0.95);
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-  .wheel-container {
-    width: 280px;
-    height: 280px;
-  }
-  .result-card {
-    max-width: 90vw;
-  }
+.paon-mood {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #ddd;
+  margin-bottom: 20px;
+  font-style: italic;
 }

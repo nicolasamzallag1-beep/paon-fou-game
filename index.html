@@ -8,59 +8,51 @@
 </head>
 <body>
   <div id="app">
-    <!-- HOME -->
-    <section id="home" class="screen active">
-      <img src="paoncover.PNG" alt="Paon Cover" class="cover" />
+    <!-- Homepage -->
+    <section id="home" class="screen active" aria-label="Page d'accueil">
+      <img src="paoncover.PNG" alt="Couverture du jeu Ara Ara, Excusez Moi !" class="cover" />
       <h1 class="title">Ara Ara, Excusez Moi !</h1>
       <p class="subtitle">Didier — le paon fou après 18h</p>
-      <button id="enterBtn" class="btn primary">Entrer</button>
+      <button id="enterBtn" class="btn primary" aria-label="Entrer dans le jeu">Entrer</button>
     </section>
 
-    <!-- GAME -->
-    <section id="game" class="screen hidden" aria-hidden="true">
+    <!-- Jeu -->
+    <section id="game" class="screen hidden" aria-label="Jeu de la roue du destin">
       <header class="game-header">
-        <div class="header-info">
-          <h2>Ara Ara, Excusez Moi !</h2>
-          <div class="meta">Début : <strong>18:00</strong></div>
-        </div>
-        <button id="restartBtn" class="btn small">Retour</button>
+        <h2>Ara Ara, Excusez Moi !</h2>
+        <button id="restartBtn" class="btn small" aria-label="Retour à la page d'accueil">Retour</button>
       </header>
 
       <main class="game-main">
-        <div class="game-left">
-          <div id="prompt" class="prompt">Que fait le paon fou ce soir ?</div>
-          <div id="alternator" class="alternator" aria-hidden="true">
-            <img id="altImgA" src="paon9.PNG" alt="" class="alt-img show" />
-            <img id="altImgB" src="paon10.PNG" alt="" class="alt-img" />
-          </div>
-          <div class="wheel-wrap">
-            <canvas id="wheel" width="360" height="360" role="img" aria-label="Roue du destin"></canvas>
-            <div id="wheelPointer" class="pointer">▼</div>
-          </div>
-          <button id="spinBtn" class="btn primary spin-btn">Lancer la roue</button>
+        <div class="wheel-container">
+          <canvas id="wheel" width="360" height="360" role="img" aria-label="Roue du destin"></canvas>
+          <div id="wheelPointer" class="pointer" aria-hidden="true">▼</div>
+          <button id="spinBtn" class="btn primary spin-btn" aria-label="Lancer la roue">Lancer la roue</button>
         </div>
 
-        <div class="game-right">
-          <div id="resultCard" class="result-card hidden" aria-live="polite">
-            <img id="resultImage" src="" alt="" class="result-img" />
-            <h3 id="resultText" class="result-text"></h3>
-            <div id="resultEmoji" class="result-emoji"></div>
-            <div class="drinks">
-              <h4>Boissons</h4>
-              <div id="drinksList" class="drinks-list"></div>
-            </div>
-            <div id="paonLevel" class="paon-level"></div>
-            <button id="nextBtn" class="btn">Ok</button>
+        <section id="resultSection" class="result-section hidden" aria-live="polite" aria-atomic="true">
+          <img id="resultImage" src="" alt="" class="result-img" />
+          <h3 id="resultText" class="result-text"></h3>
+          <div id="resultEmoji" class="result-emoji"></div>
+
+          <div class="drinks">
+            <h4>Boissons</h4>
+            <div id="drinksList" class="drinks-list"></div>
           </div>
 
-          <div id="moodPanel" class="info-panel">
-            <h4>Mood of the day</h4>
-            <p id="moodText" class="mood-text">Didier est calme et sérieux en journée, mais ce soir...</p>
-          </div>
-        </div>
+          <div id="paonLevel" class="paon-level"></div>
+          <button id="nextBtn" class="btn" aria-label="Continuer">Ok</button>
+        </section>
+
+        <section id="rules" class="rules">
+          <h4>Règles du jeu</h4>
+          <p>Choisis ton destin en lançant la roue. Chaque choix influence le mood de Didier et sa consommation.</p>
+          <p>Plus il boit, plus le paon fou se réveille... Prends garde !</p>
+        </section>
       </main>
     </section>
   </div>
+
   <script src="app.js" defer></script>
 </body>
 </html>

@@ -5,12 +5,12 @@
   "initialImages": ["paon9.PNG", "paon10.PNG"],
   "choices": [
     { "text": "Rentrer chez lui se reposer", "image": "paon9.PNG", "emoji": "😴", "drinks": { "p": 0, "j": 0, "w": 0 } },
-    { "text": "Rentrer pour geeker toute la nuit", "image": "paon7.PNG", "emoji": "🤓", "drinks": { "p": 0, "j": 45, "w": 0 } },
-    { "text": "Réunion au Cavendish", "image": "paon5.PNG", "emoji": "💼", "drinks": { "p": 0, "j": 0, "w": 32 } },
-    { "text": "Faire la fête avec Vince", "image": "paon11.PNG", "emoji": "💃", "drinks": { "p": 35, "j": 25, "w": 20 } },
+    { "text": "Rentrer pour geeker toute la nuit", "image": "paon7.PNG", "emoji": "🤓", "drinks": { "p": 0, "j": 40, "w": 0 } },
+    { "text": "Réunion au Cavendish", "image": "paon5.PNG", "emoji": "💼", "drinks": { "p": 0, "j": 0, "w": 30 } },
+    { "text": "Faire la fête avec Vince", "image": "paon11.PNG", "emoji": "💃", "drinks": { "p": 30, "j": 20, "w": 15 } },
     { "text": "Soirée tranquille sans alcool", "image": "paon3.PNG", "emoji": "🕶️", "drinks": { "p": 0, "j": 0, "w": 0 } },
-    { "text": "Soirée de fou", "image": "paon6.PNG", "emoji": "🎉", "drinks": { "p": 55, "j": 40, "w": 35 } },
+    { "text": "Soirée de fou", "image": "paon6.PNG", "emoji": "🎉", "drinks": { "p": 50, "j": 35, "w": 25 } },
     { "text": "After chez Manon", "image": "paon1.PNG", "emoji": "😇", "drinks": { "p": 20, "j": 15, "w": 10 } },
-    { "text": "Se finir avec El Predator", "image": "paon4.PNG", "emoji": "😭", "drinks": { "p": 75, "j": 20, "w": 60 } }
+    { "text": "Se finir avec El Predator", "image": "paon4.PNG", "emoji": "😭", "drinks": { "p": 70, "j": 20, "w": 50 } }
   ]
 }

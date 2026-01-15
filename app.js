@@ -1,6 +1,4 @@
-// app.js
-// Charge gameData.json (avec fallback), dessine une roue, lance le spin, affiche résultat et joue sons simples via WebAudio.
-// Si tu testes en local : utiliser `python -m http.server 8000` pour éviter problèmes de fetch.
+// app.js - version fun, musique de fond, bruitages, mood, verres augmentés
 
 const DEFAULT_DATA = {
   title: "Ara Ara, Excusez Moi !",
@@ -36,6 +34,12 @@ const drinksList = document.getElementById('drinksList');
 const paonLevel = document.getElementById('paonLevel');
 const nextBtn = document.getElementById('nextBtn');
 
+const moodText = document.getElementById('moodText');
+
+const bgMusic = document.getElementById('bgMusic');
+const spinSound = document.getElementById('spinSound');
+const resultSound = document.getElementById('resultSound');
+
 let altInterval = null;
 
 // Load data, then init
@@ -68,6 +72,7 @@ function init(){
   // Hook buttons
   enterBtn.addEventListener('click', () => {
     showGame();
+    bgMusic.play().catch(() => {}); // play bg music on user interaction
   });
   restartBtn.addEventListener('click', () => {
     location.reload();
@@ -77,21 +82,20 @@ function init(){
   fastSpinBtn.addEventListener('click', () => startSpin(true));
 
   nextBtn.addEventListener('click', () => {
-    // Currently just hide result for simplicity; you could chain more interactions
     resultCard.classList.add('hidden');
     promptEl.textContent = "Que fait le paon fou maintenant ?";
     startAlternator();
+    moodText.textContent = "Didier est prêt pour une nouvelle aventure... ou pas.";
   });
 
   // Prepare wheel
   if(gameData.choices && gameData.choices.length){
     drawWheel();
   } else {
-    // fallback choices if none provided
     gameData.choices = [
       {id:1,text:"Rentrer chez lui se reposer",image:"paon1.PNG",emoji:"😴",drinks:{pinte:0,jagger:0,whisky:0}},
-      {id:2,text:"Rentrer pour geeker toute la nuit",image:"paon7.PNG",emoji:"🤓",drinks:{pinte:0,jagger:1,whisky:0}},
-      {id:3,text:"Réunion au Cavendish",image:"paon5.PNG",emoji:"💼",drinks:{pinte:0,jagger:0,whisky:1}}
+      {id:2,text:"Rentrer pour geeker toute la nuit",image:"paon7.PNG",emoji:"🤓",drinks:{pinte:0,jagger:3,whisky:0}},
+      {id:3,text:"Réunion au Cavendish",image:"paon5.PNG",emoji:"💼",drinks:{pinte:0,jagger:0,whisky:3}}
     ];
     drawWheel();
   }
@@ -101,10 +105,10 @@ function init(){
 function showGame(){
   home.classList.remove('active');
   home.classList.add('hidden');
+  game.classList.remove('hidden');
   game.classList.add('active');
-  // stop alternator on home enter and start new alternation in-game
   stopAlternator();
-  startAlternator(); // ensure alternator runs in game area
+  startAlternator();
 }
 
 /* Alternating initial images */
@@ -143,10 +147,8 @@ function drawWheel(){
   const r = Math.min(cx, cy) - 8;
   const sector = (Math.PI * 2) / n;
 
-  // clear
   ctx.clearRect(0, 0, cw, ch);
 
-  // shadow/outer
   ctx.save();
   ctx.beginPath();
   ctx.fillStyle = "rgba(0,0,0,0.14)";
@@ -154,7 +156,6 @@ function drawWheel(){
   ctx.fill();
   ctx.restore();
 
-  // draw sectors
   for(let i=0;i<n;i++){
     const start = i * sector - Math.PI/2;
     const end = start + sector;
@@ -162,41 +163,33 @@ function drawWheel(){
     ctx.moveTo(cx,cy);
     ctx.arc(cx,cy,r,start,end);
     ctx.closePath();
-    // alternating colors
     ctx.fillStyle = i%2===0 ? '#2b1c5e' : '#3b2a78';
     ctx.fill();
-
-    // separator stroke
     ctx.strokeStyle = 'rgba(255,255,255,0.04)';
     ctx.stroke();
 
-    // label
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(start + sector/2);
     ctx.textAlign = 'right';
     ctx.fillStyle = '#f6f0ff';
-    ctx.font = 'bold 14px Inter, sans-serif';
+    ctx.font = 'bold 14px "Press Start 2P", cursive, Inter, sans-serif';
     const label = `${choices[i].emoji||''} ${choices[i].text}`;
-    // draw short text near edge
-    ctx.fillText( shorten(label, 26), r - 10, 6);
+    ctx.fillText(shorten(label, 26), r - 10, 6);
     ctx.restore();
   }
 
-  // center circle
   ctx.beginPath();
   ctx.fillStyle = '#0a0a1a';
   ctx.arc(cx, cy, 48, 0, Math.PI*2);
   ctx.fill();
 
-  // title in center
   ctx.fillStyle = '#9db7ff';
-  ctx.font = '700 12px Inter, sans-serif';
+  ctx.font = '700 12px "Press Start 2P", cursive, Inter, sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText('Le destin de Didier', cx, cy+4);
 }
 
-// Utility to shorten labels
 function shorten(str, max){
   if(str.length <= max) return str;
   return str.slice(0,max-1) + '…';
@@ -209,40 +202,31 @@ function startSpin(fast=false){
   isSpinning = true;
   resultCard.classList.add('hidden');
 
-  // pick a random target sector
   const n = gameData.choices.length;
   const targetIndex = Math.floor(Math.random()*n);
-  // Compute target angle such that pointer (top) lands on that sector
   const sectorAngle = (Math.PI*2)/n;
-  // Add multiple full rotations for drama
   const rotations = fast ? 6 : 12;
-  const randomOffset = (Math.random() * sectorAngle * 0.8) - (sectorAngle*0.4); // small offset
+  const randomOffset = (Math.random() * sectorAngle * 0.8) - (sectorAngle*0.4);
   const finalAngle = rotations * Math.PI * 2 + (targetIndex * sectorAngle) + sectorAngle/2 + randomOffset;
 
-  // animate from current wheelAngle to wheelAngle + finalAngle
   const start = performance.now();
   const duration = fast ? 1400 : 3600;
   const initial = wheelAngle;
   const target = wheelAngle + finalAngle;
 
-  // Play spin sound
-  playSpinSound(duration);
+  playSound(spinSound, duration);
 
   function frame(now){
     const t = Math.min(1, (now - start)/duration);
-    // ease out
     const ease = 1 - Math.pow(1-t, 3);
     wheelAngle = initial + (target - initial) * ease;
-    // draw rotated canvas
     renderWheelRotation(wheelAngle);
     if(t < 1){
       requestAnimationFrame(frame);
     } else {
       isSpinning = false;
-      // Compute landed sector index
       const normalized = (wheelAngle % (Math.PI*2) + Math.PI*2) % (Math.PI*2);
       const index = ( Math.floor( ((normalized + Math.PI/2) / sectorAngle) ) ) % n;
-      // Because we rotated the wheel itself, the mapping may be reversed: compute selected = (n - index) % n
       const selected = (n - index) % n;
       revealResult(selected);
     }
@@ -251,8 +235,6 @@ function startSpin(fast=false){
 }
 
 function renderWheelRotation(angle){
-  // draw wheel into an offscreen canvas then rotate?
-  // simplest: clear and use save/translate/rotate/draw via drawWheel rotated
   const cw = wheelCanvas.width;
   const ch = wheelCanvas.height;
   ctx.clearRect(0,0,cw,ch);
@@ -260,12 +242,10 @@ function renderWheelRotation(angle){
   ctx.translate(cw/2, ch/2);
   ctx.rotate(angle);
   ctx.translate(-cw/2, -ch/2);
-  // draw wheel static (reuse drawWheel's logic but split)
-  drawWheel(); // drawWheel draws at angle 0; since we applied transform, it rotates
+  drawWheel();
   ctx.restore();
 }
 
-/* Result handling */
 function revealResult(index){
   const choice = gameData.choices[index];
   if(!choice){
@@ -273,84 +253,54 @@ function revealResult(index){
     return;
   }
 
-  // Play clink sounds proportionally to drinks
-  const totalDrinks = (choice.drinks.pinte || 0) + (choice.drinks.jagger || 0) + (choice.drinks.whisky || 0);
-  playClinks(totalDrinks);
+  playSound(resultSound);
 
-  // Fill result card
+  const totalDrinks = (choice.drinks.pinte || 0) + (choice.drinks.jagger || 0) + (choice.drinks.whisky || 0);
+
   resultImage.src = choice.image;
   resultText.textContent = choice.text;
   resultEmoji.textContent = choice.emoji || '';
 
-  // Drinks list
   drinksList.innerHTML = '';
   addDrinkItem('Pinte de Mango', choice.drinks.pinte || 0);
   addDrinkItem('Jagger Bomb', choice.drinks.jagger || 0);
   addDrinkItem('Whisky', choice.drinks.whisky || 0);
 
-  // Paon fou level
-  const level = paonLevelString(totalDrinks);
-  paonLevel.textContent = `Niveau Paon Fou : ${level} (${totalDrinks} verres)`;
+  paonLevel.textContent = `Mood: ${paonLevelString(totalDrinks)} (${totalDrinks} verres bus)`;
+  moodText.textContent = moodDescription(totalDrinks);
 
   resultCard.classList.remove('hidden');
-  // small animation flash
   resultCard.animate([{opacity:0, transform:'translateY(8px)'},{opacity:1, transform:'translateY(0)'}], {duration:420, easing:'ease-out'});
 }
 
-/* UI small helpers */
 function addDrinkItem(name, count){
   const d = document.createElement('div');
   d.className = 'drink-item';
   d.innerHTML = `<div>${name}</div><div>${count} ${count>1?'verres':'verre'}</div>`;
   drinksList.appendChild(d);
 }
+
 function paonLevelString(total){
   if(total <= 0) return 'Calme';
-  if(total <= 2) return 'Éveillé';
-  if(total <= 4) return 'Chaud';
+  if(total <= 6) return 'Éveillé';
+  if(total <= 12) return 'Chaud';
   return 'Paon Fou';
 }
 
-/* Sound: spin + clinks using WebAudio */
-const AudioCtx = window.AudioContext || window.webkitAudioContext;
-let audioCtx = null;
-
-function ensureAudio(){
-  if(!audioCtx) audioCtx = new AudioCtx();
+function moodDescription(total){
+  if(total <= 0) return "Didier est calme et sérieux, prêt pour une soirée tranquille.";
+  if(total <= 6) return "Didier est éveillé, un peu chaud mais toujours maître de lui.";
+  if(total <= 12) return "Didier est chaud, la soirée s'anime sérieusement.";
+  return "Didier est Paon Fou, la fête est totale, attention aux dégâts !";
 }
 
-function playSpinSound(duration){
-  // simple tone sweeping effect
-  ensureAudio();
-  const o = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-  o.type = 'sine';
-  o.frequency.setValueAtTime(800, audioCtx.currentTime);
-  o.frequency.exponentialRampToValueAtTime(180, audioCtx.currentTime + duration/1000);
-  g.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 0.08);
-  g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration/1000);
-  o.connect(g); g.connect(audioCtx.destination);
-  o.start();
-  o.stop(audioCtx.currentTime + duration/1000 + 0.05);
-}
-
-function playClinks(n){
-  ensureAudio();
-  // Play n short chiming sounds
-  const now = audioCtx.currentTime;
-  for(let i=0;i<n;i++){
-    const delay = 0.12*i;
-    const o = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    o.type = 'triangle';
-    const f = 600 + Math.random()*400;
-    o.frequency.setValueAtTime(f, now + delay);
-    g.gain.setValueAtTime(0.0001, now + delay);
-    g.gain.linearRampToValueAtTime(0.12, now + delay + 0.02);
-    g.gain.exponentialRampToValueAtTime(0.0001, now + delay + 0.32);
-    o.connect(g); g.connect(audioCtx.destination);
-    o.start(now + delay);
-    o.stop(now + delay + 0.36);
+function playSound(audioElement, duration=0){
+  if(!audioElement) return;
+  audioElement.currentTime = 0;
+  audioElement.play().catch(() => {});
+  if(duration > 0){
+    setTimeout(() => {
+      audioElement.pause();
+    }, duration);
   }
 }

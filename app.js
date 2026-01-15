@@ -1,5 +1,4 @@
-// app.js - version stable et testée, responsive, accessible, sans musique de fond intrusive
-
+// Variables DOM
 const home = document.getElementById('home');
 const game = document.getElementById('game');
 const enterBtn = document.getElementById('enterBtn');
@@ -13,7 +12,7 @@ const wheelCanvas = document.getElementById('wheel');
 const ctx = wheelCanvas.getContext('2d');
 const spinBtn = document.getElementById('spinBtn');
 
-const resultCard = document.getElementById('resultCard');
+const resultSection = document.getElementById('resultSection');
 const resultImage = document.getElementById('resultImage');
 const resultText = document.getElementById('resultText');
 const resultEmoji = document.getElementById('resultEmoji');
@@ -23,10 +22,10 @@ const nextBtn = document.getElementById('nextBtn');
 const moodText = document.getElementById('moodText');
 
 let gameData = null;
-let altInterval = null;
 let wheelAngle = 0;
 let isSpinning = false;
 
+// Sons simples
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 function playTone(freq, type, duration, volume = 0.1) {
@@ -59,6 +58,7 @@ function playResultSound() {
   setTimeout(() => playTone(800, 'triangle', 0.15, 0.08), 500);
 }
 
+// Chargement JSON
 async function fetchGameData() {
   try {
     const res = await fetch('gameData.json');
@@ -70,6 +70,7 @@ async function fetchGameData() {
   }
 }
 
+// Initialisation
 function initGame(data) {
   gameData = data || {
     title: 'Ara Ara, Excusez Moi !',
@@ -81,12 +82,14 @@ function initGame(data) {
 
   document.title = gameData.title;
   promptEl.textContent = gameData.initialPrompt;
+
+  // Alternateur images (pas visible ici mais prêt si besoin)
   altA.src = gameData.initialImages[0];
   altB.src = gameData.initialImages[1];
 
-  startAlternator();
   drawWheel();
 
+  // Navigation
   enterBtn.addEventListener('click', () => {
     if (audioCtx.state === 'suspended') audioCtx.resume();
     home.classList.add('hidden');
@@ -99,37 +102,12 @@ function initGame(data) {
   spinBtn.addEventListener('click', () => startSpin());
 
   nextBtn.addEventListener('click', () => {
-    resultCard.classList.add('hidden');
-    promptEl.textContent = 'Que fait le paon fou maintenant ?';
-    startAlternator();
+    resultSection.classList.add('hidden');
     moodText.textContent = 'Didier est prêt pour une nouvelle aventure... ou pas.';
   });
 }
 
-function startAlternator() {
-  stopAlternator();
-  let showA = true;
-  altA.classList.add('show');
-  altB.classList.remove('show');
-  altInterval = setInterval(() => {
-    showA = !showA;
-    if (showA) {
-      altA.classList.add('show');
-      altB.classList.remove('show');
-    } else {
-      altA.classList.remove('show');
-      altB.classList.add('show');
-    }
-  }, 900);
-}
-
-function stopAlternator() {
-  if (altInterval) {
-    clearInterval(altInterval);
-    altInterval = null;
-  }
-}
-
+// Dessin roue avec emojis uniquement
 function drawWheel() {
   const choices = gameData.choices;
   const n = choices.length;
@@ -142,10 +120,11 @@ function drawWheel() {
 
   ctx.clearRect(0, 0, cw, ch);
 
+  // Ombre circulaire
   ctx.save();
   ctx.beginPath();
-  ctx.fillStyle = 'rgba(0,0,0,0.14)';
   ctx.arc(cx + 4, cy + 6, r + 8, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(0,0,0,0.14)';
   ctx.fill();
   ctx.restore();
 
@@ -161,20 +140,21 @@ function drawWheel() {
     ctx.strokeStyle = 'rgba(255,255,255,0.04)';
     ctx.stroke();
 
+    // Emoji centré dans le secteur
+    const midAngle = start + sector / 2;
+    const emoji = gameData.choices[i].emoji || '❓';
     ctx.save();
     ctx.translate(cx, cy);
-    ctx.rotate(start + sector / 2);
-    ctx.textAlign = 'right';
+    ctx.rotate(midAngle);
+    ctx.font = '48px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
     ctx.fillStyle = '#f6f0ff';
-    ctx.font = 'bold 14px Helvetica, Arial, sans-serif';
-
-    // Texte multi-lignes propre
-    const label = `${choices[i].emoji || ''} ${choices[i].text}`;
-    wrapText(ctx, label, 0, 6, r - 20, 16);
-
+    ctx.fillText(emoji, r * 0.6, 0);
     ctx.restore();
   }
 
+  // Cercle central
   ctx.beginPath();
   ctx.fillStyle = '#0a0a1a';
   ctx.arc(cx, cy, 48, 0, Math.PI * 2);
@@ -186,33 +166,11 @@ function drawWheel() {
   ctx.fillText('Le destin de Didier', cx, cy + 4);
 }
 
-function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-  const words = text.split(' ');
-  let line = '';
-  let lines = [];
-  for (let n = 0; n < words.length; n++) {
-    const testLine = line + words[n] + ' ';
-    const metrics = ctx.measureText(testLine);
-    const testWidth = metrics.width;
-    if (testWidth > maxWidth && n > 0) {
-      lines.push(line);
-      line = words[n] + ' ';
-    } else {
-      line = testLine;
-    }
-  }
-  lines.push(line);
-
-  for (let i = 0; i < lines.length; i++) {
-    ctx.fillText(lines[i].trim(), x, y + i * lineHeight);
-  }
-}
-
+// Animation rotation roue
 function startSpin() {
   if (isSpinning) return;
-  stopAlternator();
   isSpinning = true;
-  resultCard.classList.add('hidden');
+  resultSection.classList.add('hidden');
 
   const n = gameData.choices.length;
   const targetIndex = Math.floor(Math.random() * n);
@@ -258,10 +216,11 @@ function renderWheelRotation(angle) {
   ctx.restore();
 }
 
+// Affichage résultat avec animation
 function revealResult(index) {
   const choice = gameData.choices[index];
   if (!choice) {
-    console.error('choice not found', index);
+    console.error('Choix introuvable', index);
     return;
   }
 
@@ -270,6 +229,7 @@ function revealResult(index) {
   const totalDrinks = (choice.drinks.pinte || 0) + (choice.drinks.jagger || 0) + (choice.drinks.whisky || 0);
 
   resultImage.src = choice.image;
+  resultImage.alt = choice.text;
   resultText.textContent = choice.text;
   resultEmoji.textContent = choice.emoji || '';
 
@@ -281,8 +241,13 @@ function revealResult(index) {
   paonLevel.textContent = `Mood: ${paonLevelString(totalDrinks)} (${totalDrinks} verres bus)`;
   moodText.textContent = moodDescription(totalDrinks);
 
-  resultCard.classList.remove('hidden');
-  resultCard.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 420, easing: 'ease-out' });
+  resultSection.classList.remove('hidden');
+
+  // Animation zoom + glow
+  resultImage.animate([
+    { transform: 'scale(0.8)', filter: 'drop-shadow(0 0 0 #a07aff)' },
+    { transform: 'scale(1)', filter: 'drop-shadow(0 0 20px #a07aff)' }
+  ], { duration: 600, easing: 'ease-out' });
 }
 
 function addDrinkItem(name, count) {
@@ -306,4 +271,5 @@ function moodDescription(total) {
   return "Didier est PAON FOU, la fête est totale, attention aux dégâts !";
 }
 
+// Chargement et initialisation
 fetchGameData().then(initGame);

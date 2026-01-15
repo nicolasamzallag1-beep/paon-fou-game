@@ -8,51 +8,51 @@
 </head>
 <body>
   <div id="app">
-    <!-- PAGE D'ACCUEIL -->
+    <!-- Accueil -->
     <section id="home" class="screen active" aria-label="Page d'accueil">
       <img src="paoncover.PNG" alt="Couverture du jeu Ara Ara, Excusez Moi !" class="cover" />
       <h1 class="title">Ara Ara, Excusez Moi !</h1>
       <p class="subtitle">Didier — le paon fou après 18h</p>
-      <button id="enterBtn" class="btn primary" aria-label="Entrer dans le jeu">Entrer</button>
+      <button id="enterBtn" class="btn primary">Entrer</button>
     </section>
 
-    <!-- ÉCRAN DE JEU -->
+    <!-- Jeu -->
     <section id="game" class="screen hidden" aria-label="Jeu de la roue du destin">
       <header class="game-header">
-        <button id="backBtn" class="btn small" aria-label="Retour à la page d'accueil">Retour</button>
+        <button id="backBtn" class="btn small">← Retour</button>
         <h2 class="game-title">Ara Ara, Excusez Moi !</h2>
       </header>
 
       <main class="game-main">
         <div class="wheel-container">
+          <div class="pointer">▼</div>
           <canvas id="wheel" aria-label="Roue du destin"></canvas>
-          <div id="wheelPointer" class="pointer" aria-hidden="true">▼</div>
-          <button id="spinBtn" class="btn primary spin-btn" aria-label="Lancer la roue">Lancer la roue</button>
+          <button id="spinBtn" class="btn spin">Lancer la roue</button>
         </div>
 
-        <section class="rules" aria-label="Règles du jeu">
+        <section class="rules">
           <h3>Règles du jeu</h3>
           <p>Choisis ton destin en lançant la roue. Chaque choix influence le mood de Didier et sa consommation.</p>
           <p>Plus il boit, plus le paon fou se réveille... Prends garde !</p>
         </section>
       </main>
 
-      <!-- OVERLAY RÉSULTAT -->
-      <div id="resultPanel" class="result-panel hidden" role="dialog" aria-live="polite" aria-atomic="true">
+      <!-- Résultat -->
+      <div id="resultPanel" class="result-panel" role="dialog" aria-live="polite" aria-atomic="true" aria-hidden="true">
         <div class="result-card">
-          <img id="resultImage" class="result-img" src="" alt="" />
+          <img id="resultImage" class="result-img" src="" alt="Image résultat" />
           <div id="resultEmoji" class="result-emoji"></div>
           <h3 id="resultText" class="result-text"></h3>
 
-          <div class="drinks-list" aria-label="Liste des boissons consommées">
+          <div class="drinks-list">
             <div class="drink-item"><span>Pinte de Mango</span><span id="drinkP">0</span></div>
             <div class="drink-item"><span>Jagger Bomb</span><span id="drinkJ">0</span></div>
             <div class="drink-item"><span>Whisky</span><span id="drinkW">0</span></div>
           </div>
 
-          <div id="paonMood" class="paon-mood" aria-label="Mood de Didier"></div>
+          <div id="paonMood" class="paon-mood"></div>
 
-          <button id="closeResult" class="btn" aria-label="Fermer le résultat">Ok</button>
+          <button id="closeResult" class="btn">OK</button>
         </div>
       </div>
     </section>

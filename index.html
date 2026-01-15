@@ -7,6 +7,10 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <audio id="bgMusic" src="sounds/bg-music.mp3" loop preload="auto"></audio>
+  <audio id="spinSound" src="sounds/spin-sound.mp3" preload="auto"></audio>
+  <audio id="resultSound" src="sounds/result-sound.mp3" preload="auto"></audio>
+
   <div id="app">
     <!-- Cover / Home -->
     <section id="home" class="panel active">
@@ -17,7 +21,7 @@
     </section>
 
     <!-- Game -->
-    <section id="game" class="panel">
+    <section id="game" class="panel hidden">
       <header class="game-header">
         <div class="left">
           <h2 id="gameTitle">Ara Ara, Excusez Moi !</h2>
@@ -65,16 +69,9 @@
             <button id="nextBtn" class="btn">Ok</button>
           </div>
 
-          <div id="infoPanel" class="info-panel">
-            <h4>Univers</h4>
-            <p>Esthétique Paon — style moderne, tech. Jeu trash & décalé.</p>
-            <h4>Boissons</h4>
-            <ul>
-              <li>Pinte de Mango</li>
-              <li>Jagger Bomb</li>
-              <li>Whisky</li>
-            </ul>
-            <div class="hint">Astuce : la roue décide le destin et le nombre de verres.</div>
+          <div id="moodPanel" class="info-panel">
+            <h4>Mood of the day</h4>
+            <p id="moodText" class="mood-text">Didier est calme et sérieux en journée, mais ce soir...</p>
           </div>
         </div>
       </main>

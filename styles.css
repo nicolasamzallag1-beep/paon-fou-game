@@ -1,124 +1,58 @@
-:root {
-  --p-deep: #0a0e27;
-  --p-blue: #005f73;
-  --p-teal: #0a9396;
-  --p-gold: #e9d8a6;
-  --p-purple: #9b59b6;
-  --accent: #00f5d4;
-  --glass: rgba(255, 255, 255, 0.05);
+:root{
+  --bg1:#04203a; --bg2:#0d6b6a; --accent:#a07aff; --neon:#00f5d4; --card:#17122a;
+  --glass: rgba(255,255,255,0.06);
 }
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  height: 100vh;
-  width: 100vw;
-  font-family: sans-serif;
-  background: var(--p-deep);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
+*{box-sizing:border-box;margin:0;padding:0}
+html,body,#app{height:100%}
+body{
+  font-family:Inter,system-ui,Arial,sans-serif;
+  background: linear-gradient(120deg,var(--bg1),var(--bg2));
+  background-size:300% 300%; animation:grad 18s ease infinite;
+  color:#eaeaea; display:flex; align-items:center; justify-content:center;
 }
+@keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-body::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 20% 30%, var(--p-blue) 0%, transparent 40%),
-              radial-gradient(circle at 80% 70%, var(--p-purple) 0%, transparent 40%);
-  z-index: -2;
-}
+.panel{width:100%;max-width:980px;padding:24px;display:flex;flex-direction:column;align-items:center}
+.center{align-items:center;justify-content:center}
+.cover{width:420px;max-width:88vw;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.06)}
+.btn{background:var(--accent);color:#110826;border:none;padding:12px 28px;border-radius:28px;font-weight:800;cursor:pointer;margin-top:18px;box-shadow:0 8px 20px rgba(160,122,255,0.15)}
+.btn.small{padding:8px 12px;border-radius:14px;font-size:0.85rem}
+.btn:hover{transform:translateY(-4px);filter:drop-shadow(0 6px 18px rgba(160,122,255,0.2))}
 
-.bg-animate { position: absolute; inset: 0; z-index: -1; }
+/* INTRO */
+.intro-title{font-size:1.6rem;margin-bottom:14px;color:var(--accent);font-weight:900;text-align:center;letter-spacing:0.6px}
+.card{background:var(--card);padding:14px;border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.04)}
+.clickable{cursor:pointer;transition:transform .25s}
+.clickable:hover{transform:translateY(-6px)}
+.intro-image{width:320px;max-width:78vw;border-radius:12px;display:block;box-shadow:0 12px 30px rgba(0,0,0,0.6)}
 
-.ocelle {
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  background: radial-gradient(circle, var(--accent) 0%, var(--p-blue) 30%, transparent 70%);
-  border-radius: 50% 0 50% 50%;
-  transform: rotate(45deg);
-  opacity: 0.15;
-  filter: blur(20px);
-  animation: float 15s infinite ease-in-out;
-}
+/* hint */
+.hint{color:rgba(255,255,255,0.8);font-size:0.9rem;margin-top:8px}
 
-@keyframes float {
-  0%, 100% { transform: translate(0, 0) rotate(45deg); }
-  50% { transform: translate(30px, -50px) rotate(60deg); }
-}
+/* GAME */
+.game-header{display:flex;gap:12px;align-items:center;justify-content:center;width:100%;margin-bottom:8px}
+.game-title{font-size:1.1rem;color:var(--neon);font-weight:800;margin-right:6px}
+.pointer{font-size:34px;color:var(--neon);margin-top:-14px;margin-bottom:-10px}
 
-.screen {
-  position: absolute;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  transition: 0.5s;
-}
+/* rules */
+.rules{background:var(--glass);padding:12px;border-radius:12px;color:#e6e6e6;font-size:0.9rem;max-width:780px;margin-bottom:12px}
+.hidden{display:none}
 
-.hidden { opacity: 0; pointer-events: none; transform: translateY(20px); }
+/* WHEEL */
+canvas#wheel{width:340px;height:340px;border-radius:50%;background:linear-gradient(180deg,rgba(0,0,0,0.08),transparent);box-shadow:0 30px 60px rgba(0,0,0,0.6);border:8px solid rgba(255,255,255,0.03)}
 
-.cover { width: 100%; max-width: 400px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+/* RESULT */
+.overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:60;background:linear-gradient(180deg,rgba(3,7,20,0.9),rgba(3,7,20,0.95))}
+.result-card{width:92%;max-width:460px;background:linear-gradient(180deg,rgba(13,11,26,0.98),rgba(19,14,36,0.98));padding:18px;border-radius:18px;border:1px solid rgba(160,122,255,0.35);box-shadow:0 40px 80px rgba(0,0,0,0.6);display:flex;flex-direction:column;align-items:center;gap:10px;max-height:85vh;overflow:auto}
+#resultImage{width:auto;max-width:100%;height:auto;max-height:36vh;border-radius:12px;object-fit:contain}
+.result-title{font-weight:900;font-size:1.15rem;color:var(--neon);text-align:center}
+.result-emoji{font-size:34px}
+.drinks-list{display:flex;gap:10px;width:100%;justify-content:space-between}
+.drink{background:rgba(255,255,255,0.03);padding:10px;border-radius:10px;flex:1;text-align:center}
+.drink-label{font-size:0.75rem;color:#cfcff5}
+.drink-value{font-weight:900;color:var(--accent);font-size:1.05rem;margin-top:6px}
+.paon-mood{font-style:italic;color:#e6e6e6;text-align:center;padding:4px 6px}
 
-.title {
-  font-size: 2rem;
-  font-weight: 900;
-  text-align: center;
-  background: linear-gradient(to right, var(--accent), var(--p-purple));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin: 20px 0;
-}
-
-.btn {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
-  padding: 15px 40px;
-  border-radius: 50px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.btn.primary { background: var(--accent); color: var(--p-deep); border: none; }
-
-.wheel-container { position: relative; margin: 20px 0; }
-#wheel { width: 320px; height: 320px; border-radius: 50%; border: 5px solid var(--glass); }
-.pointer { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 40px; color: var(--accent); }
-
-.result-panel {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.9);
-  backdrop-filter: blur(10px);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-}
-
-.result-panel.show { display: flex; }
-
-.result-card {
-  background: #151425;
-  border: 1px solid var(--accent);
-  border-radius: 30px;
-  padding: 20px;
-  width: 90%;
-  max-width: 380px;
-  text-align: center;
-}
-
-.result-img { width: 100%; border-radius: 20px; margin-bottom: 15px; object-fit: contain; max-height: 200px; }
-
-.drinks-list { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 15px 0; }
-.drink-item { background: rgba(0,0,0,0.3); padding: 8px; border-radius: 10px; font-size: 0.7rem; }
-.drink-item strong { display: block; font-size: 1rem; color: var(--p-gold); }
-
-.paon-mood { font-size: 0.9rem; color: #ddd; font-style: italic; margin-bottom: 15px; }
+/* animated letters (intro title) */
+.intro-title span{display:inline-block;opacity:0;transform:translateY(8px) rotate(-2deg);animation:letterIn .7s forwards}
+@keyframes letterIn{to{opacity:1;transform:none}}

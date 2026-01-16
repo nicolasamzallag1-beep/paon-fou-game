@@ -1,18 +1,18 @@
 {
   "choices": [
     {
-      "text": "S'occupe chez lui",
+      "text": "S'entraine chez lui",
       "image": "paon8.PNG",
       "emoji": "😴",
-      "drinks": { "p": 0, "j": 0, "w": 0 },
-      "mood": "Didier est sobre, soirée tranquille."
+      "drinks": { "p": 1, "j": 0, "w": 2 },
+      "mood": "Arra Arra"
     },
     {
       "text": "Rentré pour geeker toute la nuit",
       "image": "paon7.PNG",
       "emoji": "🤓",
       "drinks": { "p": 1, "j": 1, "w": 0 },
-      "mood": "Geek-mode activé."
+      "mood": "Excusez-Moi !."
     },
     {
       "text": "Réunion au Cavendish",
@@ -26,21 +26,21 @@
       "image": "paon11.PNG",
       "emoji": "💃",
       "drinks": { "p": 5, "j": 3, "w": 2 },
-      "mood": "Vince garantit les bonnes blagues..Cocu Cocu."
+      "mood": "C'etait une bonne blague...Cocu ! Cocu !"
     },
     {
       "text": "Soirée tranquille sans alcool",
       "image": "paon3.PNG",
       "emoji": "🕶️",
       "drinks": { "p": 0, "j": 0, "w": 0 },
-      "mood": "Soirée chill — Netflix & canap."
+      "mood": "Rare mais sympa."
     },
     {
       "text": "Soirée de fou",
       "image": "paon6.PNG",
       "emoji": "🎉",
       "drinks": { "p": 8, "j": 5, "w": 5 },
-      "mood": "C'est la folie. Arra Arra"
+      "mood": "C'est la folie."
     },
     {
       "text": "After chez Manon",

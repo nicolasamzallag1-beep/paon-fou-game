@@ -4,13 +4,13 @@
   "initialPrompt": "Que fait le paon fou ce soir ?",
   "initialImages": ["paon9.PNG", "paon10.PNG"],
   "choices": [
-    { "text": "Rentrer chez lui se reposer", "image": "paon9.PNG", "emoji": "😴", "drinks": { "p": 3, "j": 0, "w": 1 } },
-    { "text": "Rentrer pour geeker toute la nuit", "image": "paon7.PNG", "emoji": "🤓", "drinks": { "p": 1, "j": 2, "w": 1 } },
-    { "text": "Réunion au Cavendish", "image": "paon5.PNG", "emoji": "💼", "drinks": { "p": 2, "j": 3, "w": 4 } },
-    { "text": "Faire la fête avec Vince", "image": "paon11.PNG", "emoji": "💃", "drinks": { "p": 5, "j": 3, "w": 2 } },
-    { "text": "Soirée tranquille sans alcool", "image": "paon3.PNG", "emoji": "🕶️", "drinks": { "p": 0, "j": 0, "w": 0 } },
-    { "text": "Soirée de fou", "image": "paon6.PNG", "emoji": "🎉", "drinks": { "p": 8, "j": 5, "w": 5 } },
-    { "text": "After chez Manon", "image": "paon1.PNG", "emoji": "😇", "drinks": { "p": 6, "j": 4, "w": 2 } },
-    { "text": "Se finir avec El Predator", "image": "paon4.PNG", "emoji": "😭", "drinks": { "p": 7, "j": 2, "w": 80 } }
+    { "text": "Rentrer chez lui se reposer", "image": "paon1.PNG", "emoji": "😴", "drinks": { "p": 0, "j": 0, "w": 0 }, "mood": "Didier est sobre, soirée tranquille." },
+    { "text": "Rentrer pour geeker toute la nuit", "image": "paon7.PNG", "emoji": "🤓", "drinks": { "p": 1, "j": 1, "w": 0 }, "mood": "Nerd-mode activé : snacks et claviers." },
+    { "text": "Réunion au Cavendish", "image": "paon5.PNG", "emoji": "💼", "drinks": { "p": 1, "j": 2, "w": 1 }, "mood": "Réunion pro..." },
+    { "text": "Faire la fête avec Vince", "image": "paon11.PNG", "emoji": "💃", "drinks": { "p": 4, "j": 3, "w": 2 }, "mood": "Vince garantit les bonnes blagues...Cocu Cocu." },
+    { "text": "Soirée tranquille sans alcool", "image": "paon3.PNG", "emoji": "🕶️", "drinks": { "p": 0, "j": 0, "w": 0 }, "mood": "Soirée chill — excusez-moi." },
+    { "text": "Soirée de fou", "image": "paon6.PNG", "emoji": "🎉", "drinks": { "p": 8, "j": 5, "w": 5 }, "mood": "C'est la folie. Arra Arra." },
+    { "text": "After chez Manon", "image": "paon1.PNG", "emoji": "😇", "drinks": { "p": 5, "j": 3, "w": 2 }, "mood": "After cosy chez Manon, attention..." },
+    { "text": "Se finir avec El Predator", "image": "paon4.PNG", "emoji": "😭", "drinks": { "p": 6, "j": 4, "w": 6 }, "mood": "La nuit qui se termine mal... ou pas." }
   ]
 }

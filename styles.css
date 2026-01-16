@@ -1,6 +1,5 @@
 :root{
-  --bg1:#04203a; --bg2:#0d6b6a; --accent:#a07aff; --neon:#00f5d4; --card:#17122a;
-  --glass: rgba(255,255,255,0.06);
+  --bg1:#04203a; --bg2:#0d6b6a; --accent:#a07aff; --neon:#00f5d4; --card:#17122a; --glass:rgba(255,255,255,0.05);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body,#app{height:100%}
@@ -15,7 +14,7 @@ body{
 .panel{width:100%;max-width:980px;padding:24px;display:flex;flex-direction:column;align-items:center}
 .center{align-items:center;justify-content:center}
 .cover{width:420px;max-width:88vw;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.06)}
-.btn{background:var(--accent);color:#110826;border:none;padding:12px 28px;border-radius:28px;font-weight:800;cursor:pointer;margin-top:18px;box-shadow:0 8px 20px rgba(160,122,255,0.15)}
+.btn{background:var(--accent);color:#0f0620;border:none;padding:12px 28px;border-radius:28px;font-weight:800;cursor:pointer;margin-top:18px;box-shadow:0 8px 20px rgba(160,122,255,0.15)}
 .btn.small{padding:8px 12px;border-radius:14px;font-size:0.85rem}
 .btn:hover{transform:translateY(-4px);filter:drop-shadow(0 6px 18px rgba(160,122,255,0.2))}
 
@@ -27,7 +26,7 @@ body{
 .intro-image{width:320px;max-width:78vw;border-radius:12px;display:block;box-shadow:0 12px 30px rgba(0,0,0,0.6)}
 
 /* hint */
-.hint{color:rgba(255,255,255,0.8);font-size:0.9rem;margin-top:8px}
+.hint{color:rgba(255,255,255,0.85);font-size:0.92rem;margin-top:8px}
 
 /* GAME */
 .game-header{display:flex;gap:12px;align-items:center;justify-content:center;width:100%;margin-bottom:8px}
@@ -35,29 +34,19 @@ body{
 .pointer{font-size:34px;color:var(--neon);margin-top:-14px;margin-bottom:-10px}
 
 /* rules */
-.rules{background:var(--glass);padding:12px;border-radius:12px;color:#e6e6e6;font-size:0.9rem;max-width:780px;margin-bottom:12px}
+.rules{background:var(--glass);padding:12px;border-radius:12px;color:#e6e6e6;font-size:0.95rem;max-width:780px;margin-bottom:12px}
 .hidden{display:none}
 
 /* WHEEL */
 canvas#wheel{width:340px;height:340px;border-radius:50%;background:linear-gradient(180deg,rgba(0,0,0,0.08),transparent);box-shadow:0 30px 60px rgba(0,0,0,0.6);border:8px solid rgba(255,255,255,0.03)}
 
 /* RESULT */
-/* Dans styles.css, remplace la classe .overlay par celle-ci */
-.overlay {
-  position: fixed;
-  inset: 0;
-  display: none; /* CACHE LE PANNEAU PAR DÉFAUT */
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(10px);
+.overlay{
+  position:fixed; inset:0; display:none !important; align-items:center; justify-content:center; z-index:1000;
+  background:rgba(0,0,0,0.9); backdrop-filter: blur(10px);
 }
-
-.overlay.show {
-  display: flex; /* NE L'AFFICHE QUE LORSQU'ON AJOUTE LA CLASSE .show */
-}
-.result-card{width:92%;max-width:460px;background:linear-gradient(180deg,rgba(13,11,26,0.98),rgba(19,14,36,0.98));padding:18px;border-radius:18px;border:1px solid rgba(160,122,255,0.35);box-shadow:0 40px 80px rgba(0,0,0,0.6);display:flex;flex-direction:column;align-items:center;gap:10px;max-height:85vh;overflow:auto}
+.overlay.show{display:flex !important}
+.result-card{width:92%;max-width:540px;background:linear-gradient(180deg,rgba(13,11,26,0.98),rgba(19,14,36,0.98));padding:18px;border-radius:18px;border:1px solid rgba(160,122,255,0.28);box-shadow:0 40px 80px rgba(0,0,0,0.6);display:flex;flex-direction:column;align-items:center;gap:10px;max-height:85vh;overflow:auto}
 #resultImage{width:auto;max-width:100%;height:auto;max-height:36vh;border-radius:12px;object-fit:contain}
 .result-title{font-weight:900;font-size:1.15rem;color:var(--neon);text-align:center}
 .result-emoji{font-size:34px}
@@ -70,3 +59,9 @@ canvas#wheel{width:340px;height:340px;border-radius:50%;background:linear-gradie
 /* animated letters (intro title) */
 .intro-title span{display:inline-block;opacity:0;transform:translateY(8px) rotate(-2deg);animation:letterIn .7s forwards}
 @keyframes letterIn{to{opacity:1;transform:none}}
+
+@media (max-width:520px){
+  .cover{width:300px}
+  .intro-image{width:260px}
+  canvas#wheel{width:300px;height:300px}
+}

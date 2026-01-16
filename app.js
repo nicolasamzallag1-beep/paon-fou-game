@@ -15,34 +15,36 @@ document.addEventListener('DOMContentLoaded', () => {
   const drinkW = document.getElementById('drinkW');
   const paonMood = document.getElementById('paonMood');
 
-  let gameData = null;
+  // DONNÉES INTÉGRÉES POUR ÉVITER LES ERREURS DE CHARGEMENT
+  const gameData = {
+    "choices": [
+      { "text": "Rentrer chez lui se reposer", "image": "paon9.PNG", "emoji": "😴", "drinks": { "p": 2, "j": 0, "w": 1 } },
+      { "text": "Rentrer pour geeker toute la nuit", "image": "paon7.PNG", "emoji": "🤓", "drinks": { "p": 1, "j": 4, "w": 0 } },
+      { "text": "Réunion au Cavendish", "image": "paon5.PNG", "emoji": "💼", "drinks": { "p": 0, "j": 0, "w": 30 } },
+      { "text": "Faire la fête avec Vince", "image": "paon11.PNG", "emoji": "💃", "drinks": { "p": 5, "j": 3, "w": 3 } },
+      { "text": "Soirée tranquille sans alcool", "image": "paon3.PNG", "emoji": "🕶️", "drinks": { "p": 0, "j": 0, "w": 0 } },
+      { "text": "Soirée de fou", "image": "paon6.PNG", "emoji": "🎉", "drinks": { "p": 8, "j": 5, "w": 5 } },
+      { "text": "After chez Manon", "image": "paon1.PNG", "emoji": "😇", "drinks": { "p": 6, "j": 4, "w": 2 } },
+      { "text": "Se finir avec El Predator", "image": "paon4.PNG", "emoji": "😭", "drinks": { "p": 7, "j": 2, "w": 80 } }
+    ]
+  };
+
   let spinning = false;
   let currentAngle = 0;
 
-  // Load game data
-  async function loadGameData() {
-    const res = await fetch('gameData.json');
-    gameData = await res.json();
-  }
-
-  // Draw wheel
   function drawWheel() {
     const n = gameData.choices.length;
     const arc = (2 * Math.PI) / n;
     const radius = wheel.width / 2 - 10;
     const centerX = wheel.width / 2;
     const centerY = wheel.height / 2;
-
     ctx.clearRect(0, 0, wheel.width, wheel.height);
-
     for (let i = 0; i < n; i++) {
       ctx.beginPath();
       ctx.fillStyle = i % 2 === 0 ? '#3a1a6a' : '#2a154f';
       ctx.moveTo(centerX, centerY);
       ctx.arc(centerX, centerY, radius, i * arc, (i + 1) * arc);
       ctx.fill();
-
-      // Emoji
       ctx.save();
       ctx.translate(centerX, centerY);
       ctx.rotate(i * arc + arc / 2);
@@ -52,44 +54,31 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.fillText(gameData.choices[i].emoji, radius * 0.65, 10);
       ctx.restore();
     }
-
-    // Center circle
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius * 0.2, 0, 2 * Math.PI);
     ctx.fillStyle = '#1a0f3f';
     ctx.fill();
-
-    ctx.fillStyle = '#9b59b6';
-    ctx.font = 'bold 14px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('Le destin de Didier', centerX, centerY + 5);
   }
 
-  // Spin wheel
   function spinWheel() {
     if (spinning) return;
     spinning = true;
     spinBtn.disabled = true;
-
     const n = gameData.choices.length;
     const arc = (2 * Math.PI) / n;
     const targetIndex = Math.floor(Math.random() * n);
-
-    const spins = 6 + Math.floor(Math.random() * 4);
+    const spins = 8;
     const targetAngle = spins * 2 * Math.PI + (n - targetIndex) * arc - arc / 2;
-
     const duration = 3000;
     const start = performance.now();
-
     function animate(time) {
       const elapsed = time - start;
       const progress = Math.min(elapsed / duration, 1);
       const ease = 1 - Math.pow(1 - progress, 3);
       currentAngle = targetAngle * ease;
       wheel.style.transform = `rotate(${currentAngle}rad)`;
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
+      if (progress < 1) requestAnimationFrame(animate);
+      else {
         spinning = false;
         spinBtn.disabled = false;
         showResult(targetIndex);
@@ -98,17 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(animate);
   }
 
-  // Mood phrases
-  function getMood(total) {
-    if (total === 0) return "Didier est sobre, soirée tranquille.";
-    if (total < 20) return "Le paon s’échauffe doucement.";
-    if (total < 40) return "Didier commence à s’amuser.";
-    if (total < 60) return "Paon fou en action, ça bouge !";
-    if (total < 80) return "Didier est chaud, ça dérape.";
-    return "PAON FOU MAXIMUM ! Soirée légendaire.";
-  }
-
-  // Show result
   function showResult(index) {
     const choice = gameData.choices[index];
     resultImage.src = choice.image;
@@ -117,45 +95,17 @@ document.addEventListener('DOMContentLoaded', () => {
     drinkP.textContent = choice.drinks.p;
     drinkJ.textContent = choice.drinks.j;
     drinkW.textContent = choice.drinks.w;
-
     const total = choice.drinks.p + choice.drinks.j + choice.drinks.w;
-    paonMood.textContent = getMood(total);
-
-    resultPanel.setAttribute('aria-hidden', 'false');
+    paonMood.textContent = total > 50 ? "PAON FOU MAXIMUM !" : "Le paon s'échauffe...";
     resultPanel.classList.add('show');
-
-    playSound(440, 0.3, 'square');
-  }
-
-  // Simple beep sound
-  function playSound(freq, duration, type = 'sine') {
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
-
-    oscillator.type = type;
-    oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
-    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-
-    oscillator.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-
-    oscillator.start();
-    oscillator.stop(audioCtx.currentTime + duration);
-
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
   }
 
   enterBtn.addEventListener('click', () => {
     home.style.display = 'none';
     game.style.display = 'flex';
-    loadGameData().then(drawWheel);
+    drawWheel();
   });
 
   spinBtn.addEventListener('click', spinWheel);
-
-  closeResult.addEventListener('click', () => {
-    resultPanel.setAttribute('aria-hidden', 'true');
-    resultPanel.classList.remove('show');
-  });
+  closeResult.addEventListener('click', () => resultPanel.classList.remove('show'));
 });

@@ -15,22 +15,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const drinkW = document.getElementById('drinkW');
   const paonMood = document.getElementById('paonMood');
 
-  // DONNÉES INTÉGRÉES POUR ÉVITER LES ERREURS DE CHARGEMENT
-  const gameData = {
-    "choices": [
-      { "text": "Rentrer chez lui se reposer", "image": "paon9.PNG", "emoji": "😴", "drinks": { "p": 2, "j": 0, "w": 1 } },
-      { "text": "Rentrer pour geeker toute la nuit", "image": "paon7.PNG", "emoji": "🤓", "drinks": { "p": 1, "j": 4, "w": 0 } },
-      { "text": "Réunion au Cavendish", "image": "paon5.PNG", "emoji": "💼", "drinks": { "p": 0, "j": 0, "w": 30 } },
-      { "text": "Faire la fête avec Vince", "image": "paon11.PNG", "emoji": "💃", "drinks": { "p": 5, "j": 3, "w": 3 } },
-      { "text": "Soirée tranquille sans alcool", "image": "paon3.PNG", "emoji": "🕶️", "drinks": { "p": 0, "j": 0, "w": 0 } },
-      { "text": "Soirée de fou", "image": "paon6.PNG", "emoji": "🎉", "drinks": { "p": 8, "j": 5, "w": 5 } },
-      { "text": "After chez Manon", "image": "paon1.PNG", "emoji": "😇", "drinks": { "p": 6, "j": 4, "w": 2 } },
-      { "text": "Se finir avec El Predator", "image": "paon4.PNG", "emoji": "😭", "drinks": { "p": 7, "j": 2, "w": 80 } }
-    ]
-  };
-
+  let gameData = null;
   let spinning = false;
   let currentAngle = 0;
+
+  // CETTE FONCTION VA CHERCHER TES SCORES DANS GAMEDATA.JSON
+  async function loadData() {
+    try {
+      const res = await fetch('gameData.json');
+      gameData = await res.json();
+      drawWheel();
+    } catch (e) {
+      console.error("Erreur de chargement JSON");
+    }
+  }
 
   function drawWheel() {
     const n = gameData.choices.length;
@@ -54,14 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.fillText(gameData.choices[i].emoji, radius * 0.65, 10);
       ctx.restore();
     }
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius * 0.2, 0, 2 * Math.PI);
-    ctx.fillStyle = '#1a0f3f';
-    ctx.fill();
   }
 
   function spinWheel() {
-    if (spinning) return;
+    if (spinning || !gameData) return;
     spinning = true;
     spinBtn.disabled = true;
     const n = gameData.choices.length;
@@ -87,23 +81,34 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(animate);
   }
 
+  function getMood(total) {
+    if (total === 0) return "Didier est sobre, soirée tranquille.";
+    if (total < 10) return "Le paon s’échauffe doucement.";
+    if (total < 20) return "Didier commence à s’amuser.";
+    if (total < 30) return "Paon fou en action, ça bouge !";
+    return "PAON FOU MAXIMUM ! Soirée légendaire.";
+  }
+
   function showResult(index) {
     const choice = gameData.choices[index];
     resultImage.src = choice.image;
     resultText.textContent = choice.text;
     resultEmoji.textContent = choice.emoji;
+    
+    // ICI ON UTILISE LES VRAIS CHIFFRES DE TON JSON
     drinkP.textContent = choice.drinks.p;
     drinkJ.textContent = choice.drinks.j;
     drinkW.textContent = choice.drinks.w;
+    
     const total = choice.drinks.p + choice.drinks.j + choice.drinks.w;
-    paonMood.textContent = total > 50 ? "PAON FOU MAXIMUM !" : "Le paon s'échauffe...";
+    paonMood.textContent = getMood(total);
     resultPanel.classList.add('show');
   }
 
   enterBtn.addEventListener('click', () => {
     home.style.display = 'none';
     game.style.display = 'flex';
-    drawWheel();
+    loadData(); // On charge les données au moment d'entrer
   });
 
   spinBtn.addEventListener('click', spinWheel);

@@ -42,7 +42,21 @@ body{
 canvas#wheel{width:340px;height:340px;border-radius:50%;background:linear-gradient(180deg,rgba(0,0,0,0.08),transparent);box-shadow:0 30px 60px rgba(0,0,0,0.6);border:8px solid rgba(255,255,255,0.03)}
 
 /* RESULT */
-.overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:60;background:linear-gradient(180deg,rgba(3,7,20,0.9),rgba(3,7,20,0.95))}
+/* Dans styles.css, remplace la classe .overlay par celle-ci */
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: none; /* CACHE LE PANNEAU PAR DÉFAUT */
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+}
+
+.overlay.show {
+  display: flex; /* NE L'AFFICHE QUE LORSQU'ON AJOUTE LA CLASSE .show */
+}
 .result-card{width:92%;max-width:460px;background:linear-gradient(180deg,rgba(13,11,26,0.98),rgba(19,14,36,0.98));padding:18px;border-radius:18px;border:1px solid rgba(160,122,255,0.35);box-shadow:0 40px 80px rgba(0,0,0,0.6);display:flex;flex-direction:column;align-items:center;gap:10px;max-height:85vh;overflow:auto}
 #resultImage{width:auto;max-width:100%;height:auto;max-height:36vh;border-radius:12px;object-fit:contain}
 .result-title{font-weight:900;font-size:1.15rem;color:var(--neon);text-align:center}

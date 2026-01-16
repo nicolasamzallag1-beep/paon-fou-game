@@ -1,84 +1,77 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Ara Ara, Excusez Moi !</title>
-  <style>
-  body {
-    margin: 0; font-family: sans-serif; 
-    background: linear-gradient(135deg, #0a1435, #004e64, #00a896, #023047);
-    background-size: 400% 400%; animation: gradientBG 15s ease infinite;
-    color: #eee; display: flex; align-items: center; justify-content: center;
-    height: 100vh; overflow: hidden;
-  }
-  @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-  #home, #intro, #game { width: 100%; max-width: 450px; padding: 20px; text-align: center; z-index: 1; }
-  #home img, #intro img { width: 100%; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-
-  button {
-    background: #a07aff; border: none; padding: 15px 35px; border-radius: 40px;
-    color: white; font-weight: 900; cursor: pointer; text-transform: uppercase;
-  }
-
-  #game { display: none; flex-direction: column; align-items: center; }
-  #wheel { border-radius: 50%; border: 5px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); }
-  .pointer { font-size: 40px; color: #00f5d4; margin-bottom: -30px; z-index: 2; }
-
-  /* CORRECTION RÉSULTAT */
-  #resultPanel {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-    display: none; align-items: center; justify-content: center; z-index: 100;
-  }
-  #resultPanel.show { display: flex; }
-  #resultCard {
-    background: #1a1430; border: 2px solid #a07aff; padding: 20px; border-radius: 25px;
-    width: 85%; max-width: 380px; max-height: 90vh; overflow-y: auto; text-align: center;
-  }
-  #resultImage { width: 100%; max-height: 180px; object-fit: cover; border-radius: 15px; margin-bottom: 10px; }
-  #resultText { font-weight: 900; font-size: 1.2rem; color: #00f5d4; margin-bottom: 10px; }
-  
-  .drinks-list { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-  .drinks-list div { background: rgba(255,255,255,0.05); padding: 8px; border-radius: 10px; font-size: 0.7rem; }
-  .drinks-list span { display: block; font-size: 1.1rem; color: #a07aff; font-weight: bold; }
-  
-  #paonMood { font-style: italic; color: #fff; font-size: 0.95rem; margin-bottom: 15px; display: block; }
-</style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <main id="app">
+    <!-- ACCUEIL -->
+    <section id="home" class="panel center">
+      <img src="paoncover.PNG" alt="Couverture Ara Ara" class="cover" />
+      <button id="enterBtn" class="btn">Entrer</button>
+    </section>
 
-  <div id="home">
-    <img src="paoncover.PNG" alt="Couverture Ara Ara, Excusez Moi !" />
-    <button id="enterBtn">Entrer</button>
-  </div>
-
-  <section id="intro" class="screen hidden" style="text-align:center; padding: 20px;">
-    <h2 style="color:#a07aff; margin-bottom: 20px;">18h - Que fait le paon fou ce soir ?</h2>
-    <img id="introImage" src="paon9.PNG" alt="Paon hésitant" style="width: 80%; max-width: 300px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px;">
-    <button id="startGameBtn" class="btn" style="background:#7a5aff; color:#fff;">Commencer</button>
-  </section>
-
-  <div id="game" class="screen">
-    <div class="pointer">▼</div>
-    <canvas id="wheel" width="320" height="320"></canvas>
-    <button id="spinBtn" style="margin-top: 20px;">Lancer la roue</button>
-  </div>
-
-  <div id="resultPanel" role="dialog" aria-modal="true" aria-hidden="true">
-    <div id="resultCard">
-      <img id="resultImage" alt="Image résultat" />
-      <div id="resultEmoji"></div>
-      <div id="resultText"></div>
-      <div class="drinks-list">
-        <div>Pinte de Mango<br /><span id="drinkP">0</span></div>
-        <div>Jagger Bomb<br /><span id="drinkJ">0</span></div>
-        <div>Whisky<br /><span id="drinkW">0</span></div>
+    <!-- INTRO (18h) : plus de bouton "Commencer" -->
+    <section id="intro" class="panel hidden">
+      <h2 id="introTitle" class="intro-title">18h - Que fait le paon fou ce soir ?</h2>
+      <div id="introCard" class="card clickable">
+        <img id="introImage" src="paon9.PNG" alt="Paon hésitant" class="intro-image" />
       </div>
-      <div id="paonMood"></div>
-      <button id="closeResult" style="width: 100%;">OK</button>
+      <p class="hint">Clique sur la carte pour lancer la soirée</p>
+    </section>
+
+    <!-- JEU -->
+    <section id="game" class="panel hidden">
+      <div class="game-header">
+        <h3 class="game-title">Destin du Paon</h3>
+        <button id="rulesToggle" class="btn small">Règles</button>
+      </div>
+
+      <div id="rules" class="rules hidden">
+        <ul>
+          <li>18h → hésitation du paon, tu choisis en lançant la roue.</li>
+          <li>La roue décide d'une soirée (carte). Chaque carte a des verres : Pinte de Mango (p), Jagger Bomb (j), Whisky (w).</li>
+          <li>Le "Mood" est calculé par la somme p + j + w et affiche un commentaire.</li>
+          <li>Les sons sont générés localement (WebAudio), pas de MP3.</li>
+          <li>Prends la décision (ou relance) et amuse-toi — c’est juste pour rire !</li>
+        </ul>
+      </div>
+
+      <div class="pointer">▼</div>
+      <canvas id="wheel" width="340" height="340" aria-hidden="true"></canvas>
+      <button id="spinBtn" class="btn">Lancer la roue</button>
+    </section>
+
+    <!-- RESULTAT -->
+    <div id="resultPanel" class="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+      <div id="resultCard" class="result-card">
+        <img id="resultImage" alt="Image résultat" />
+        <div id="resultEmoji" class="result-emoji"></div>
+        <div id="resultText" class="result-title"></div>
+
+        <div class="drinks-list">
+          <div class="drink">
+            <div class="drink-label">Pinte de Mango</div>
+            <div class="drink-value" id="drinkP">0</div>
+          </div>
+          <div class="drink">
+            <div class="drink-label">Jagger Bomb</div>
+            <div class="drink-value" id="drinkJ">0</div>
+          </div>
+          <div class="drink">
+            <div class="drink-label">Whisky</div>
+            <div class="drink-value" id="drinkW">0</div>
+          </div>
+        </div>
+
+        <div id="paonMood" class="paon-mood"></div>
+        <button id="closeResult" class="btn">OK</button>
+      </div>
     </div>
-  </div>
+  </main>
 
   <script src="app.js"></script>
 </body>

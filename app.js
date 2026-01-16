@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   const home = document.getElementById('home');
+  const intro = document.getElementById('intro');
+  const introImage = document.getElementById('introImage');
+  const startGameBtn = document.getElementById('startGameBtn');
   const game = document.getElementById('game');
   const enterBtn = document.getElementById('enterBtn');
   const spinBtn = document.getElementById('spinBtn');
@@ -19,7 +22,35 @@ document.addEventListener('DOMContentLoaded', () => {
   let spinning = false;
   let currentAngle = 0;
 
-  // CETTE FONCTION VA CHERCHER TES SCORES DANS GAMEDATA.JSON
+  // Bruitages simples
+  function playBeep(freq = 440, duration = 0.1) {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'square';
+    osc.frequency.value = freq;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+    osc.stop(ctx.currentTime + duration);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+  }
+
+  function playSpinSound() {
+    let i = 0;
+    const interval = setInterval(() => {
+      playBeep(600 + i * 20, 0.05);
+      i++;
+      if (i > 10) clearInterval(interval);
+    }, 50);
+  }
+
+  function playResultSound() {
+    playBeep(880, 0.3);
+    setTimeout(() => playBeep(660, 0.2), 300);
+  }
+
   async function loadData() {
     try {
       const res = await fetch('gameData.json');
@@ -58,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (spinning || !gameData) return;
     spinning = true;
     spinBtn.disabled = true;
+    playSpinSound();
     const n = gameData.choices.length;
     const arc = (2 * Math.PI) / n;
     const targetIndex = Math.floor(Math.random() * n);
@@ -83,9 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function getMood(total) {
     if (total === 0) return "Didier est sobre, soirée tranquille.";
-    if (total < 10) return "Le paon s’échauffe doucement.";
-    if (total < 20) return "Didier commence à s’amuser.";
-    if (total < 30) return "Paon fou en action, ça bouge !";
+    if (total < 5) return "Le paon s’échauffe doucement.";
+    if (total < 10) return "Didier commence à s’amuser.";
+    if (total < 15) return "Paon fou en action, ça bouge !";
     return "PAON FOU MAXIMUM ! Soirée légendaire.";
   }
 
@@ -94,21 +126,32 @@ document.addEventListener('DOMContentLoaded', () => {
     resultImage.src = choice.image;
     resultText.textContent = choice.text;
     resultEmoji.textContent = choice.emoji;
-    
-    // ICI ON UTILISE LES VRAIS CHIFFRES DE TON JSON
     drinkP.textContent = choice.drinks.p;
     drinkJ.textContent = choice.drinks.j;
     drinkW.textContent = choice.drinks.w;
-    
     const total = choice.drinks.p + choice.drinks.j + choice.drinks.w;
     paonMood.textContent = getMood(total);
+    playResultSound();
     resultPanel.classList.add('show');
   }
 
   enterBtn.addEventListener('click', () => {
     home.style.display = 'none';
-    game.style.display = 'flex';
-    loadData(); // On charge les données au moment d'entrer
+    intro.style.display = 'block';
+    // Alterner les images paon9.PNG et paon10.PNG toutes les 2 secondes
+    let toggle = true;
+    introImage.src = 'paon9.PNG';
+    const interval = setInterval(() => {
+      introImage.src = toggle ? 'paon10.PNG' : 'paon9.PNG';
+      toggle = !toggle;
+    }, 2000);
+
+    startGameBtn.onclick = () => {
+      clearInterval(interval);
+      intro.style.display = 'none';
+      game.style.display = 'flex';
+      loadData();
+    };
   });
 
   spinBtn.addEventListener('click', spinWheel);

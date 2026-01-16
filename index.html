@@ -8,40 +8,46 @@
 </head>
 <body>
   <main id="app">
+    <!-- ACCUEIL -->
     <section id="home" class="panel center">
       <img src="paoncover.PNG" alt="Couverture" class="cover" />
       <button id="enterBtn" class="btn">Entrer</button>
     </section>
 
+    <!-- INTRO -->
     <section id="intro" class="panel hidden">
       <h2 id="introTitle" class="intro-title">18h - Que fait le paon fou ce soir ?</h2>
-      <div id="introCard" class="card clickable">
+      <div id="introCard" class="card clickable" aria-label="Carte d'intro - cliquer pour commencer">
         <img id="introImage" src="paon9.PNG" alt="Hésitation" class="intro-image" />
       </div>
       <p class="hint">Clique sur la carte pour lancer la soirée</p>
     </section>
 
-    <section id="game" class="panel hidden">
+    <!-- JEU -->
+    <section id="game" class="panel hidden game-section">
       <div class="game-header">
         <h3 class="game-title">Le destin du Paon</h3>
-        <button id="rulesToggle" class="btn small">Règles</button>
+        <div id="rulesToggle" class="rules-toggle" tabindex="0" role="button" aria-pressed="false" aria-controls="rules" aria-expanded="false">Règles du jeu</div>
       </div>
-      <div id="rules" class="rules hidden">
+      <div id="rules" class="rules hidden" aria-hidden="true">
         <ul>
-          <li>La roue décide de ta soirée.</li>
-          <li>Le "Mood" dépend du nombre total de verres.</li>
-          <li>Les sons sont générés en direct.</li>
+          <li>18h → hésitation : clique sur la carte pour démarrer.</li>
+          <li>Lance la roue. La carte choisie indique la soirée et les verres (p = Pinte de Mango, j = Jagger Bomb, w = Whisky).</li>
+          <li>Le "Mood" est la somme p + j + w (affiché en bas). Tu peux ajuster les seuils dans app.js.</li>
+          <li>Les sons sont générés localement (WebAudio) — pas d’MP3 nécessaires.</li>
+          <li>Amuse-toi — c’est juste pour rire.</li>
         </ul>
       </div>
-      <div class="pointer">▼</div>
-      <canvas id="wheel" width="340" height="340"></canvas>
+      <div class="pointer" aria-hidden="true">▼</div>
+      <canvas id="wheel" width="340" height="340" aria-hidden="true"></canvas>
       <button id="spinBtn" class="btn">Lancer la roue</button>
     </section>
 
-    <div id="resultPanel" class="overlay">
+    <!-- RESULTAT -->
+    <div id="resultPanel" class="overlay" role="dialog" aria-modal="true" aria-hidden="true">
       <div id="resultCard" class="result-card">
         <img id="resultImage" alt="Résultat" />
-        <div id="resultEmoji" class="result-emoji"></div>
+        <div id="resultEmoji" class="result-emoji" aria-hidden="true"></div>
         <div id="resultText" class="result-title"></div>
         <div class="drinks-list">
           <div class="drink"><div>Pinte Mango</div><div id="drinkP">0</div></div>
@@ -53,6 +59,7 @@
       </div>
     </div>
   </main>
+
   <script src="app.js"></script>
 </body>
 </html>

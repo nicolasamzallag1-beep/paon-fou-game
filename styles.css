@@ -8,7 +8,7 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body, #app { height: 100%; overflow: hidden; }
+html, body, #app { height: 100%; width: 100%; overflow: hidden; }
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -27,102 +27,99 @@ body {
   100% { background-position: 0% 50%; }
 }
 
-.panel { width: 100%; max-width: 980px; padding: 24px; display: flex; flex-direction: column; align-items: center; }
-.center { align-items: center; justify-content: center; }
+.panel { width: 100%; max-width: 600px; padding: 20px; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: center; }
 
-/* EFFET WHAOU 1 : La Cover avec lueur pulsée */
+/* COVER ACCUEIL */
 .cover {
-  width: 420px; max-width: 85vw;
+  width: auto;
+  max-width: 90vw;
+  max-height: 60vh; /* Empêche de déborder en hauteur sur PC */
   border-radius: 24px;
   box-shadow: 0 0 40px rgba(160, 122, 255, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  object-fit: contain;
 }
-.cover:hover { transform: scale(1.03) rotate(1deg); box-shadow: 0 0 60px rgba(0, 245, 212, 0.4); }
 
-/* Bouton Premium */
+/* BOUTONS */
 .btn {
   background: linear-gradient(135deg, var(--accent), #8b4fff);
   color: #fff; border: none;
-  padding: 14px 32px; border-radius: 30px;
-  font-weight: 800; font-size: 1.1rem;
-  text-transform: uppercase; letter-spacing: 1px;
-  cursor: pointer; margin-top: 24px;
+  padding: 12px 28px; border-radius: 30px;
+  font-weight: 800; font-size: 1rem;
+  text-transform: uppercase; cursor: pointer; margin-top: 20px;
   box-shadow: 0 10px 25px rgba(139, 79, 255, 0.4);
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
-.btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(139, 79, 255, 0.6); filter: brightness(1.1); }
-.btn:active { transform: translateY(1px); }
+.btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
 
 /* INTRO */
-.intro-title { font-size: 1.8rem; margin-bottom: 20px; color: var(--accent); font-weight: 900; text-align: center; text-shadow: 0 0 15px rgba(160, 122, 255, 0.5); }
-
-/* EFFET WHAOU 2 : La Carte d'intro flottante */
+.intro-title { font-size: 1.4rem; margin-bottom: 15px; color: var(--accent); font-weight: 900; text-align: center; }
 .card {
-  background: var(--card); padding: 12px; border-radius: 20px;
+  background: var(--card); padding: 10px; border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   animation: float 4s ease-in-out infinite;
+  max-width: 90vw;
 }
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-}
-.intro-image { width: 320px; max-width: 75vw; border-radius: 15px; display: block; }
-
-.hint { color: var(--neon); font-size: 0.9rem; margin-top: 15px; font-weight: 600; opacity: 0.8; animation: blink 2s infinite; }
-@keyframes blink { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+@keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+.intro-image { width: auto; max-width: 100%; max-height: 50vh; border-radius: 15px; display: block; object-fit: contain; }
 
 /* GAME SECTION */
-.game-section { position: relative; width: 100%; max-width: 480px; }
-.game-header { display: flex; justify-content: space-between; width: 100%; margin-bottom: 15px; align-items: center; }
-.game-title { font-size: 1.2rem; color: var(--neon); font-weight: 800; }
-.rules-toggle { color: var(--accent); font-weight: 700; cursor: pointer; font-size: 0.9rem; text-decoration: underline; }
+.game-section { position: relative; width: 100%; max-width: 450px; height: auto; }
+.game-header { display: flex; justify-content: space-between; width: 100%; margin-bottom: 10px; align-items: center; }
+.game-title { font-size: 1.1rem; color: var(--neon); font-weight: 800; }
+.rules-toggle { color: var(--accent); font-weight: 700; cursor: pointer; font-size: 0.85rem; text-decoration: underline; }
 
-.rules { background: rgba(0, 0, 0, 0.4); padding: 15px; border-radius: 15px; font-size: 0.85rem; border: 1px solid var(--glass); margin-bottom: 15px; line-height: 1.4; }
+.rules { background: rgba(0, 0, 0, 0.6); padding: 15px; border-radius: 15px; font-size: 0.8rem; border: 1px solid var(--glass); margin-bottom: 10px; max-height: 150px; overflow-y: auto; }
 .hidden { display: none !important; }
 
 /* WHEEL */
-.pointer { font-size: 40px; color: var(--neon); filter: drop-shadow(0 0 10px var(--neon)); z-index: 10; margin-bottom: -30px; position: relative; }
+.pointer { font-size: 30px; color: var(--neon); filter: drop-shadow(0 0 10px var(--neon)); z-index: 10; margin-bottom: -25px; position: relative; }
 canvas#wheel { 
-  width: 340px; height: 340px; border-radius: 50%; 
-  box-shadow: 0 0 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(255,255,255,0.1);
-  border: 10px solid #1a1430;
+  width: 320px; height: 320px; max-width: 85vw; max-height: 85vw; border-radius: 50%; 
+  box-shadow: 0 0 40px rgba(0,0,0,0.8);
+  border: 8px solid #1a1430;
 }
 
-/* EFFET WHAOU 3 : Overlay Résultat avec flou de mouvement */
+/* RESULT OVERLAY */
 .overlay {
   position: fixed; inset: 0; display: none !important; align-items: center; justify-content: center; z-index: 1000;
-  background: rgba(4, 32, 58, 0.85); backdrop-filter: blur(12px);
-  animation: fadeIn 0.4s ease;
+  background: rgba(4, 32, 58, 0.9); backdrop-filter: blur(10px);
 }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .overlay.show { display: flex !important; }
 
 .result-card {
-  width: 90%; max-width: 450px; background: var(--card); padding: 25px; border-radius: 30px;
-  border: 2px solid var(--accent); box-shadow: 0 0 60px rgba(0,0,0,0.8);
-  display: flex; flex-direction: column; align-items: center; gap: 15px;
-  transform: scale(0.8); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  width: 95%; max-width: 420px; max-height: 95vh; /* Très important pour mobile */
+  background: var(--card); padding: 20px; border-radius: 25px;
+  border: 2px solid var(--accent); box-shadow: 0 0 50px rgba(0,0,0,0.8);
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  overflow-y: auto; /* Permet de scroller si l'écran est minuscule */
 }
-@keyframes popIn { to { transform: scale(1); } }
 
-#resultImage { width: 100%; border-radius: 20px; object-fit: contain; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-.result-title { font-weight: 900; font-size: 1.4rem; color: var(--neon); text-shadow: 0 0 10px rgba(0, 245, 212, 0.3); }
-.result-emoji { font-size: 45px; margin: -10px 0; }
+#resultImage { 
+  width: auto; 
+  max-width: 100%; 
+  max-height: 40vh; /* L'image ne prendra jamais plus de 40% de la hauteur de l'écran */
+  border-radius: 15px; 
+  object-fit: contain; 
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5); 
+}
 
-.drinks-list { display: flex; gap: 12px; width: 100%; }
-.drink { background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 15px; flex: 1; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
-.drink div:first-child { font-size: 0.7rem; text-transform: uppercase; opacity: 0.7; margin-bottom: 5px; }
-.drink div:last-child { font-weight: 900; color: var(--accent); font-size: 1.3rem; }
+.result-title { font-weight: 900; font-size: 1.2rem; color: var(--neon); text-align: center; }
+.result-emoji { font-size: 35px; }
 
-.paonMood { font-style: italic; color: #fff; opacity: 0.9; text-align: center; font-size: 1rem; margin-top: 5px; }
+.drinks-list { display: flex; gap: 8px; width: 100%; }
+.drink { background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 12px; flex: 1; text-align: center; }
+.drink div:first-child { font-size: 0.65rem; text-transform: uppercase; opacity: 0.7; }
+.drink div:last-child { font-weight: 900; color: var(--accent); font-size: 1.1rem; }
 
-/* Animation des lettres */
-.intro-title span { display: inline-block; opacity: 0; transform: translateY(10px); animation: letterIn 0.5s forwards; }
-@keyframes letterIn { to { opacity: 1; transform: translateY(0); } }
+.paon-mood { font-style: italic; color: #fff; opacity: 0.9; text-align: center; font-size: 0.9rem; }
 
-@media (max-width: 500px) {
-  .cover { width: 300px; }
-  canvas#wheel { width: 300px; height: 300px; }
-  .intro-image { width: 260px; }
+/* MUTE BUTTON */
+#soundToggle { transform: scale(0.9); }
+
+@media (max-height: 700px) {
+  .intro-title { font-size: 1.1rem; }
+  canvas#wheel { width: 260px; height: 260px; }
+  .btn { padding: 10px 20px; font-size: 0.9rem; }
 }

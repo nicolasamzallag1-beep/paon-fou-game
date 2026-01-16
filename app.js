@@ -115,9 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function getMood(total) {
     if (total === 0) return "Didier est sobre, soirée tranquille.";
-    if (total < 5) return "Le paon s’échauffe doucement.";
-    if (total < 10) return "Didier commence à s’amuser.";
-    if (total < 15) return "Paon fou en action, ça bouge !";
+    if (total < 3) return "Le paon s’échauffe doucement.";
+    if (total < 6) return "Didier commence à s’amuser.";
+    if (total < 9) return "Paon fou en action, ça bouge !";
     return "PAON FOU MAXIMUM ! Soirée légendaire.";
   }
 
